@@ -1,2 +1,6 @@
 ./binlog.000001
 ./binlog.000002
+<<<<<<< HEAD
+=======
+./binlog.000003
+>>>>>>> 1efaa37d (Integració del Laravel al contenedor del docker)

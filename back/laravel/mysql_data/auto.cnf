@@ -1,2 +1,6 @@
 [auto]
+<<<<<<< HEAD
 server-uuid=9635366e-f8ef-11ef-b225-0242ac130002
+=======
+server-uuid=f464bf85-f93e-11ef-8145-0242ac130002
+>>>>>>> 1efaa37d (Integració del Laravel al contenedor del docker)
