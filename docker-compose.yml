@@ -1,7 +1,7 @@
 services:
 
+  # DATABASE
   db: 
-    # image: mysql:8.2.0
     image: mysql:8.3
     restart: always
     environment:
@@ -12,6 +12,7 @@ services:
     volumes:
       - ./back/laravel/mysql_data:/var/lib/mysql
 
+  # ADMINER
   adminer:
     image: adminer
     restart: always
@@ -20,6 +21,7 @@ services:
     ports:
       - "8080:8080"
 
+  # LARAVEL
   laravel:
     build: ./back/laravel
     ports:
@@ -30,3 +32,18 @@ services:
     depends_on:
       - db
     command: bash -c 'composer update && php artisan serve --host=0.0.0.0'
+
+  # NUXT
+  nuxt:
+    build: 
+      context: ./front
+    ports:
+      - 3000:3000
+    volumes:
+      - ./front:/app
+    depends_on:
+      - laravel
+    environment:
+      NUXT_APP_API_URL: http://laravel:8000
+      CHOKIDAR_USEPOLLING: true
+    command: bash -c "npm install && npm run dev"
