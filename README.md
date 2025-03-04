@@ -1,16 +1,16 @@
-# transversals
-Esquema mínim de carpetes pels projectes transversals
+# 🎬 Cinema-App
 
-És obligatori seguir aquesta estructura tot i que la podeu ampliar.
+## 👥 Integrants
+- Jehgo Aivan Antonio
 
-## Atenció
-Un cop comenceu heu de canviar aquesta explicació amb la corresponent al vostre projecte (utilitzant markdown)
+## 📜 Descripció del Projecte
+Aquest projecte consisteix en el desenvolupament d’una aplicació web que permet als usuaris adquirir entrades per a un cinema. La plataforma gestionarà la projecció d’una pel·lícula diària, permetent als espectadors consultar la cartellera, seleccionar butaques i realitzar la compra de les seves entrades de manera senzilla i eficient. L’objectiu és oferir una experiència intuïtiva i optimitzada tant per als clients com per a l’administració del cinema.
 
-# Aquest fitxer ha de contenir com a mínim:
- * Nom dels integrants
- * Nom del projecte
- * Petita descripció
- * Adreça del gestor de tasques (taiga, jira, trello...)
- * Adreça del prototip gràfic del projecte (Penpot, figma, moqups...)
- * URL de producció (quan la tingueu)
- * Estat: (explicació d'en quin punt està)
+## 🔗 Enllaços
+
+- **Gestor de tasques:** [Enllaç al gestor de tasques](URL_gestor_de_tasques) 📝
+- **Prototip gràfic:** [Enllaç al prototip gràfic](URL_prototip_gràfic) 🎨
+- **URL de producció:** (Afegeix l'URL un cop disponible) 🌐
+
+## 📍 Estat del Projecte
+Actualment, el projecte es troba en la fase de desenvolupament inicial. S'ha establert l'estructura bàsica de l'aplicació i es continua treballant en la integració de la compra d'entrades, així com en l'optimització de la interfície d'usuari.
