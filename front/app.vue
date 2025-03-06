@@ -1,5 +1,5 @@
 <template>
-  <div>
-    <p class="text-3xl">Hello world</p>
-  </div>
+    <div class="w-full h-full flex flex-col bg-gradient-to-tr from-gray-800/50 to-gray-900">
+    <NuxtPage />
+    </div>
 </template>
