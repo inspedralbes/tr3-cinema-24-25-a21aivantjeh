@@ -9,8 +9,8 @@ Aquest projecte consisteix en el desenvolupament d’una aplicació web que perm
 ## 🔗 Enllaços
 
 - **Gestor de tasques:** [Enllaç al gestor de tasques](URL_gestor_de_tasques) 📝
-- **Prototip gràfic:** [Enllaç al prototip gràfic](URL_prototip_gràfic) 🎨
-- **URL de producció:** (Afegeix l'URL un cop disponible) 🌐
+- **Prototip gràfic:** [Enllaç al prototip gràfic](https://www.figma.com/design/Zk3dGJa6QJYtYIXzkdt1CX/Projecte%3A-Cinema-App?node-id=0-1&t=l1mLXpm00Btkg1mL-1) 🎨
+- **URL de producció:** (a21aivantjeh.cinema.daw.inspedrabes.cat) 🌐
 
 ## 📍 Estat del Projecte
 Actualment, el projecte es troba en la fase de desenvolupament inicial. S'ha establert l'estructura bàsica de l'aplicació i es continua treballant en la integració de la compra d'entrades, així com en l'optimització de la interfície d'usuari.

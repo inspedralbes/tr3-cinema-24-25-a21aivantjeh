@@ -9,6 +9,7 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
+  ssr: false,
   app: {
     head: {
       title: 'Cinema-App',
