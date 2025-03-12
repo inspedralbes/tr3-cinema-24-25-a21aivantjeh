@@ -14,20 +14,21 @@ return new class extends Migration
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->text('description');
             $table->string('genre');
-            $table->string('year');
-            $table->string('rating');
-            $table->integer('duration');
-            $table->string('director');
-            $table->string('producers');
-            $table->string('cast');
-            $table->string('classification');
-            $table->string('language');
-            $table->date('release_date');
-            $table->string('image')->nullable();
-            $table->string('video')->nullable();
-            $table->string('country');
+            $table->string('year')->nullable();
+            $table->string('rating')->nullable();
+            $table->string('duration')->nullable();
+            $table->string('director')->nullable();
+            $table->string('writer')->nullable();
+            $table->string('cast')->nullable();
+            $table->string('rated')->nullable();
+            $table->string('language')->nullable();
+            $table->date('release_date')->nullable();
+            $table->string('poster')->nullable();
+            $table->string('trailer')->nullable();
+            $table->string('country')->nullable();
+            $table->enum('status', ['Coming soon', 'Now playing', 'Finished'])->default('coming soon');
             $table->timestamps();
         });
     }

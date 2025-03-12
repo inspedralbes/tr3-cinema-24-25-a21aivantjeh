@@ -1,7 +1,9 @@
 <template>
-    <div class="grid flex-1 pb-17 gap-5">
+    <div class="grid pb-17">
+        <titlebar />
         <top-movies />
         <movies />
+        <coming-soon />
         <navbar />
     </div>
 </template>

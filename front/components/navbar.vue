@@ -5,7 +5,7 @@
                 <!-- <a href="/app"> -->
                 <NuxtLink to="/">
                     <img src="../assets/images/inicio.svg" alt="Inici"
-                        class="size-7 hover:scale-110 transition-transform duration-300" />
+                        class="size-5 hover:scale-110 transition-transform duration-300" />
                     <!-- </a> -->
                 </NuxtLink>
             </li>
@@ -13,7 +13,7 @@
                 <!-- <a href="/Showing"> -->
                 <NuxtLink to="/showing">
                     <img src="../assets/images/claqueta.svg" alt="Cartelera"
-                        class="size-7 hover:scale-110 transition-transform duration-300" />
+                        class="size-5 hover:scale-110 transition-transform duration-300" />
                 </NuxtLink>
                 <!-- </a> -->
             </li>
@@ -21,7 +21,7 @@
                 <!-- <a href="/Favorites"> -->
                 <NuxtLink to="/favorites">
                     <img src="../assets/images/corazon.svg" alt="Preferides"
-                        class="size-7 hover:scale-110 transition-transform duration-300" />
+                        class="size-5 hover:scale-110 transition-transform duration-300" />
                 </NuxtLink>
                 <!-- </a> -->
             </li>
@@ -29,7 +29,7 @@
                 <!-- <a href="/Perfil"> -->
                 <NuxtLink to="/profile">
                     <img src="../assets/images/perfil.svg" alt="Perfil"
-                        class="size-7 hover:scale-110 transition-transform duration-300" />
+                        class="size-5 hover:scale-110 transition-transform duration-300" />
                 </NuxtLink>
                 <!-- </a> -->
             </li>

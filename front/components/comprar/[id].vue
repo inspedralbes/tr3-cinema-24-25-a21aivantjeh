@@ -7,16 +7,17 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-
 const route = useRoute();
-const movieID = route.params.id;
-
 const movieData = JSON.parse(decodeURIComponent(route.query.data));
 
+const router = useRouter();
 function comprarEntradas() {
-    console.log('Comprando entradas: ', movieID);
-    navigateTo(`/comprado`);
+    console.log('Comprando entradas: ', movieData.id);
+    router.push({
+        path: '/comprar/:id',
+        query: { data: encodeURIComponent(JSON.stringify(movieData)) }
+    });
     console.log('MovieData:', movieData);
 }
+
 </script>

@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 html {
-  background-color: rgb(5, 5, 5);
+  /* background-color: rgb(5, 5, 5); */
+  background-color: black;
   scroll-behavior: smooth;
   color: white;
 }
