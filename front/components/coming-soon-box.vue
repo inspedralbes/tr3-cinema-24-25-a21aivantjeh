@@ -24,9 +24,10 @@ const props = defineProps({
 const router = useRouter();
 
 function goToMovieDetails() {
+    console.log('Coming-soon-box: ', props.movie)
     router.push({
         path: '/informacion/:id',
-        query: { data: encodeURIComponent(JSON.stringify(props.movie)) }
+        query: { data: encodeURIComponent(JSON.stringify(props)) }
     });
 };
 </script>

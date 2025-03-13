@@ -62,4 +62,10 @@ class MovieController extends Controller
     {
         //
     }
+
+    public function upcomingMovies(Movie $movie)
+    {
+        $peliculas = Movie::whereDoesntHave('showtimes')->get();
+        return response()->json($peliculas);
+    }
 }

@@ -9,17 +9,16 @@
 </template>
 
 <script setup>
-import { getPeliculas } from '../services/communicationManager';
+import { getUpcomingMovies } from '../services/communicationManager';
 
 const movies = ref([]);
 
 onMounted(async () => {
-    const peliculas = await getPeliculas();
+    const peliculas = await getUpcomingMovies();
     if (peliculas) {
-        movies.value = peliculas.filter(movie => movie.status === 'Coming soon');
-        // movies.value = peliculas;
+        movies.value = peliculas;
     }
-    console.log(movies);
+    // console.log(movies);
 
 });
 

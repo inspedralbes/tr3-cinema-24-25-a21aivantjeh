@@ -7,21 +7,21 @@
             '768': { slidesPerView: 1 },
             '1024': { slidesPerView: 1 }
             }">
-            <SwiperSlide v-for="movie in movies" :key="movie.id" class="relative" @click="comprarEntradas(movie)">
-                <div class="h-full w-full bg-cover bg-center" :style="{ backgroundImage: `url(${movie.poster})` }">
+            <SwiperSlide v-for="movie in movies" :key="movie.movie.id" class="relative" @click="comprarEntradas(movie)">
+                <div class="h-full w-full bg-cover bg-center" :style="{ backgroundImage: `url(${movie.movie.poster})` }">
                     <div class="absolute inset-[-1px] bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                 </div>
 
                 <div class="absolute bottom-0 left-0 w-full p-6 z-20">
-                    <h2 class="text-4xl font-bold text-white mb-2">{{ movie.title }}</h2>
-                    <p v-if="movie.year" class="text-xl text-gray-200">{{ movie.year }}</p>
-                    <div v-if="movie.rating" class="flex items-center mt-2">
+                    <h2 class="text-4xl font-bold text-white mb-2">{{ movie.movie.title }}</h2>
+                    <p v-if="movie.movie.year" class="text-xl text-gray-200">{{ movie.movie.year }}</p>
+                    <div v-if="movie.movie.rating" class="flex items-center mt-2">
                         <span class="text-yellow-400 mr-1">★</span>
-                        <span class="text-white">{{ movie.rating }}/10</span>
+                        <span class="text-white">{{ movie.movie.rating }} / 10</span>
                     </div>
-                    <button v-if="movie.trailer"
+                    <button v-if="movie.movie.trailer"
                         class="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
-                        @click="openTrailer(movie.trailerUrl)">
+                        @click="openTrailer(movie.movie.trailerUrl)">
                         Watch Trailer
                     </button>
                 </div>
@@ -35,16 +35,16 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { getPeliculas } from '../services/communicationManager';
+import { getShowingMovies } from '../services/communicationManager';
 
 const movies = ref([]);
 
 onMounted(async () => {
     try {
-        const peliculas = await getPeliculas();
+        const peliculas = await getShowingMovies();
         if (peliculas) {
-            // movies.value = peliculas;
-            movies.value = peliculas.filter(movie => parseFloat(movie.rating) > 7);
+            movies.value = peliculas.filter(movie => parseFloat(movie.movie.rating) > 7);
+            // console.info(movies)
         }
     } catch (error) {
         console.error("Error cargando películas", error);

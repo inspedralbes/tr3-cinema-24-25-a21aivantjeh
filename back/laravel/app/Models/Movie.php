@@ -27,4 +27,9 @@ class Movie extends Model
         'video',
         'country',
     ];
+
+    public function showtimes()
+    {
+        return $this->hasMany(Showtime::class);
+    }
 }

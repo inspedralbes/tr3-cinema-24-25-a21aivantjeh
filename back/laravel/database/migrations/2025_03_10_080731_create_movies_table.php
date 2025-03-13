@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('poster')->nullable();
             $table->string('trailer')->nullable();
             $table->string('country')->nullable();
-            $table->enum('status', ['Coming soon', 'Now playing', 'Finished'])->default('coming soon');
+            // $table->enum('status', ['Coming soon', 'Now playing', 'Finished'])->default('coming soon');
             $table->timestamps();
         });
     }

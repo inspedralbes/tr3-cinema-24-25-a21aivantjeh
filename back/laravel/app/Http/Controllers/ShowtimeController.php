@@ -12,7 +12,42 @@ class ShowtimeController extends Controller
      */
     public function index()
     {
-        //
+        $showtimes = Showtime::with('movie')->get();
+
+        $groupedShowtimes = [];
+
+        foreach ($showtimes as $showtime) {
+            $movieId = $showtime->movie_id;
+            $date = $showtime->show_date;
+
+            if (!isset($groupedShowtimes[$movieId])) {
+                $groupedShowtimes[$movieId] = [
+                    'movie' => $showtime->movie,
+                    'showing_dates' => []
+                ];
+            }
+
+            if (!isset($groupedShowtimes[$movieId]['showing_dates'][$date])) {
+                $groupedShowtimes[$movieId]['showing_dates'][$date] = [
+                    'date' => $date,
+                    'showtimes' => []
+                ];
+            }
+
+            $groupedShowtimes[$movieId]['showing_dates'][$date]['showtimes'][] = [
+                'id' => $showtime->id,
+                'time' => $showtime->show_time,
+                'price' => $showtime->price,
+                'is_special_day' => $showtime->is_special_day
+            ];
+        }
+
+        $result = [];
+        foreach ($groupedShowtimes as $movieGroup) {
+            $result[] = $movieGroup;
+        }
+
+        return $result;
     }
 
     /**

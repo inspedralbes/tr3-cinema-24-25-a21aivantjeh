@@ -8,16 +8,16 @@
 
 <script setup>
 const route = useRoute();
-const movieData = JSON.parse(decodeURIComponent(route.query.data));
+const movieDetalles = JSON.parse(decodeURIComponent(route.query.data));
 
 const router = useRouter();
 function comprarEntradas() {
-    console.log('Comprando entradas: ', movieData.id);
+    console.log('Comprando entradas: ', movieDetalles.movie.id);
     router.push({
         path: '/comprar/:id',
-        query: { data: encodeURIComponent(JSON.stringify(movieData)) }
+        query: { data: encodeURIComponent(JSON.stringify(movieDetalles)) }
     });
-    console.log('MovieData:', movieData);
+    console.log('MovieData:', movieDetalles);
 }
 
 </script>

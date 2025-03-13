@@ -6,13 +6,13 @@
                 <div class="w-12 h-16 md:w-16 md:h-20 rounded-md">
                     <img :src="movieData.poster" :alt="movieData.title" class="w-full h-full object-cover" />
                 </div>
-                <div class="flex w-full gap-2">
-                    <div>
+                <div class="flex w-full justify-between gap-2">
+                    <div class="w-[70%]">
                         <h3 class="font-bold text-lg md:text-xl">{{ movieData.title }}</h3>
-                        <p class="text-sm text-gray-300">{{ movieData.dia }} · {{ movieData.hora }}</p>
+                        <p class="text-sm text-gray-300">{{ movieData.dia.date }} · {{ movieData.hora.time }}</p>
                     </div>
-                    <div class="">
-                        <span class="px-3 py-1 bg-blue-600 rounded-full text-sm">Sala 1</span>
+                    <div>
+                        <p class="px-3 py-1 bg-blue-600 rounded-full text-sm">Sala 1</p>
                     </div>
                 </div>
             </div>
@@ -85,15 +85,19 @@
                 </div>
             </div>
 
+            
             <button v-if="asientosSeleccionados.length > 0" @click="confirmarAsientos"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-colors">
                 Continuar al pago ({{ asientosSeleccionados.length }} asiento{{ asientosSeleccionados.length > 1 ? 's' :
                 '' }})
             </button>
-
-            <p v-else class="text-center text-gray-400 mt-6">
+            
+            <p v-else class="text-center text-gray-400">
                 Selecciona al menos un asiento para continuar
             </p>
+            <div class="flex justify-center text-blue-900 hover:text-red-500 hover:underline"  @click="confirmarCancelacion()">
+                <p>Cancelar</p>
+            </div>
         </div>
     </div>
 </template>
@@ -113,10 +117,8 @@ const asientos = ref([...Array(40)].map((_, i) => ({
     reservado: Math.random() > 0.7 // Simulate some seats being already reserved
 })));
 
-// Track selected seats
 const asientosSeleccionados = ref([]);
 
-// Toggle seat selection
 const toggleAsiento = (asiento) => {
     if (!asiento.reservado) {
         if (asientosSeleccionados.value.includes(asiento.id)) {
@@ -127,12 +129,10 @@ const toggleAsiento = (asiento) => {
     }
 };
 
-// Remove a seat from selection
 const removeAsiento = (id) => {
     asientosSeleccionados.value = asientosSeleccionados.value.filter(asientoId => asientoId !== id);
 };
 
-// Proceed to payment
 const confirmarAsientos = () => {
     router.push({
         path: "/pago",
@@ -143,5 +143,12 @@ const confirmarAsientos = () => {
             }))
         }
     });
+};
+
+const confirmarCancelacion = () => {
+  if (confirm("¿Estás seguro de que quieres cancelar?")) {
+    console.log("Acción cancelada"); 
+    router.push('/');
+  }
 };
 </script>
