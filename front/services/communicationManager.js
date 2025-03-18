@@ -1,8 +1,8 @@
 const config = useRuntimeConfig();
-const HOST = config.public.apiUrl;
+const HOST = config.public.API_URL;
 
 export async function getPeliculas() {
-    const URL = `http://localhost:8000/api/movies`
+    const URL = `${HOST}/movies`
 
     try {
         const response = await fetch(URL, {
@@ -24,7 +24,7 @@ export async function getPeliculas() {
 }
 
 export async function getShowingMovies() {
-    const URL = `http://localhost:8000/api/showtimes`
+    const URL = `${HOST}/showtimes`
 
     try {
         const response = await fetch(URL, {
@@ -46,7 +46,7 @@ export async function getShowingMovies() {
 }
 
 export async function getUpcomingMovies() {
-    const URL = `http://localhost:8000/api/coming-soon`
+    const URL = `${HOST}/coming-soon`
 
     try {
         const response = await fetch(URL, {
@@ -64,5 +64,33 @@ export async function getUpcomingMovies() {
         return movies;
     } catch (error) {
         console.error("Error en la peticion de las proximas peliculas:", error);
+    }
+}
+
+export async function registerUser(userData, token) {
+    const URL = `${HOST}/register`;
+
+    try {
+        const response = await fetch(URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                // "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(userData),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();  
+            throw new Error(errorData?.message || "Error al registrar el usuario"); 
+        }
+        
+        alert("Usuario registrado correctamente");
+        window.location.href = '/';
+
+    } catch (error) {
+        // console.error("Error al registrar el usuario:", error);
+        throw error;
     }
 }

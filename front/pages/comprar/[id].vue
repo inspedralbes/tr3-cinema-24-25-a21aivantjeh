@@ -22,7 +22,6 @@
       </div>
 
       <div class="relative z-10 -mt-32 px-6 pb-6 flex flex-col md:flex-row items-start md:items-end gap-6">
-        <!-- Poster -->
         <div
           class="w-32 md:w-48 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border-4 border-gray-800 transform translate-y-0 md:-translate-y-12">
           <img :src="movieData.poster" :alt="movieData.title" class="w-full h-auto" />
@@ -62,26 +61,26 @@
 
         <div class="space-y-4">
           <div class="flex overflow-x-auto px-2 py-3 gap-2">
-            <button v-for="date in showtimes" :key="date" @click="seleccionarDia(date)"
+            <button v-for="date in availableShowtimes" :key="date.date" @click="seleccionarDia(date)"
               class="px-6 py-3 rounded-xl transition-all duration-200 flex-shrink-0 focus:ring focus:ring-blue-400"
               :class="[
-                selectedDay === date
+                selectedDay && selectedDay.date === date.date
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-700 hover:bg-gray-600 text-white'
               ]">
-              {{ date.date }}
+              {{ formatDate(date.date) }}
             </button>
           </div>
 
           <div v-if="selectedDay" class="text-center text-sm text-blue-300">
-            Día seleccionado: {{ selectedDay.date }}
+            Día seleccionado: {{ formatDate(selectedDay.date) }}
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-6">
-            <button v-for="hora in selectedDay.showtimes" :key="hora" @click="seleccionarHora(hora)" class="relative"
-              :class="selectedTime === hora ? 'ring-2 ring-blue-400' : ''">
+            <button v-for="hora in selectedDay?.showtimes || []" :key="hora.id" @click="seleccionarHora(hora)" class="relative"
+              :class="selectedTime && selectedTime.id === hora.id ? 'ring-2 ring-blue-400' : ''">
               <div class="bg-gray-700 px-4 py-4 rounded-xl flex flex-col items-center transition-all duration-200"
-                :class="selectedTime === hora ? 'bg-blue-600' : 'hover:bg-gray-600'">
+                :class="selectedTime && selectedTime.id === hora.id ? 'bg-blue-600' : 'hover:bg-gray-600'">
                 <span class="text-lg font-bold">{{ hora.time }}</span>
               </div>
             </button>
@@ -91,12 +90,8 @@
             <h3 class="font-bold mb-2">Tu selección:</h3>
             <div>
               <p class="text-blue-300">{{ movieData.title }}</p>
-              <p>{{ selectedDay.date }} a las {{ selectedTime.time }}h</p>
+              <p>{{ formatDate(selectedDay.date) }} a las {{ selectedTime.time }}h</p>
             </div>
-            <!-- <p>
-              <span class="text-blue-300">{{ movieData.title }}</span> -
-              {{ selectedDay.date }} a las {{ selectedTime.time }}
-            </p> -->
           </div>
 
           <div class="mt-6 flex justify-center">
@@ -117,26 +112,62 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 const route = useRoute();
 const router = useRouter();
 
 const movieDetalles = JSON.parse(decodeURIComponent(route.query.data || '{}'));
-const movieData = movieDetalles.movie;
+const movieData = ref(movieDetalles.movie || {});
 
-const showtimes = movieDetalles.showing_dates;;
+const showtimesObj = ref(movieDetalles.showing_dates || {});
 
-const selectedDay = ref('');
-const selectedTime = ref('');
+const selectedDay = ref(null);
+const selectedTime = ref(null);
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const availableShowtimes = computed(() => {
+  const showtimesArray = Object.values(showtimesObj.value || {});
+  
+  return showtimesArray.filter(showtime => {
+    if (!showtime || !showtime.date) return false;
+    
+    try {
+      const showtimeDate = new Date(showtime.date);
+      showtimeDate.setHours(0, 0, 0, 0);
+      
+      return showtimeDate >= today;
+    } catch (e) {
+      console.error('Error parsing date:', e);
+      return false;
+    }
+  })
+  .sort((a, b) => new Date(a.date) - new Date(b.date));
+});
+
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  
+  try {
+    const dateObj = new Date(dateString);
+    dateObj.setHours(0, 0, 0, 0);
+    
+    if (dateObj.getTime() === today.getTime()) {
+      return "Hoy";
+    }
+    
+    return dateString;
+  } catch (e) {
+    console.error('Error formatting date:', e);
+    return dateString;
+  }
+};
 
 const seleccionarDia = (dia) => {
   selectedDay.value = dia;
-  console.log(selectedDay.value)
+  selectedTime.value = null;
 };
-
-function showShowtimes() {
-  console.log('Showtimes', showtimes)
-}
 
 const seleccionarHora = (hora) => {
   selectedTime.value = hora;
@@ -148,7 +179,7 @@ const continuarSeleccion = () => {
       path: "./select-seats",
       query: {
         data: encodeURIComponent(JSON.stringify({
-          ...movieData,
+          ...movieData.value,
           dia: selectedDay.value,
           hora: selectedTime.value
         }))
@@ -157,5 +188,7 @@ const continuarSeleccion = () => {
   }
 };
 
-showShowtimes();
+if (availableShowtimes.value.length > 0) {
+  selectedDay.value = availableShowtimes.value[0];
+}
 </script>

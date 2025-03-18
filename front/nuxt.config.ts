@@ -9,7 +9,15 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
+  modules: [
+    '@pinia/nuxt',
+  ],
   ssr: false,
+  runtimeConfig: {
+    public: {
+      API_URL: process.env.NUXT_API_URL,  // Variable de entorno pública
+    }
+  },
   app: {
     head: {
       title: 'Cinema-App',

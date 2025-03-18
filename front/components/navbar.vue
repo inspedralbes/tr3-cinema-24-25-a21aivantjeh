@@ -10,14 +10,6 @@
                 </NuxtLink>
             </li>
             <li>
-                <!-- <a href="/Showing"> -->
-                <NuxtLink to="/showing">
-                    <img src="../assets/images/claqueta.svg" alt="Cartelera"
-                        class="size-5 hover:scale-110 transition-transform duration-300" />
-                </NuxtLink>
-                <!-- </a> -->
-            </li>
-            <li>
                 <!-- <a href="/Favorites"> -->
                 <NuxtLink to="/favorites">
                     <img src="../assets/images/corazon.svg" alt="Preferides"
@@ -27,7 +19,7 @@
             </li>
             <li>
                 <!-- <a href="/Perfil"> -->
-                <NuxtLink to="/profile">
+                <NuxtLink to="/user/register">
                     <img src="../assets/images/perfil.svg" alt="Perfil"
                         class="size-5 hover:scale-110 transition-transform duration-300" />
                 </NuxtLink>
