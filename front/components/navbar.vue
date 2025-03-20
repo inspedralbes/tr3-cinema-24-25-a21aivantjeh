@@ -19,7 +19,7 @@
             </li>
             <li>
                 <!-- <a href="/Perfil"> -->
-                <NuxtLink to="/user/register">
+                <NuxtLink :to="profileRoute">
                     <img src="../assets/images/perfil.svg" alt="Perfil"
                         class="size-5 hover:scale-110 transition-transform duration-300" />
                 </NuxtLink>
@@ -29,8 +29,10 @@
     </nav>
 </template>
 
-<style>
-/* .shadow-t {
-    box-shadow: 0 -5px 25px 0 rgba(255, 165, 0, 0.3);
-} */
-</style>
+<script setup>
+import { useAuthStore } from '../store/authStore';
+
+const authStore = useAuthStore();
+
+const profileRoute = computed(() => authStore.user ? '/profile' : '/user/register');
+</script>

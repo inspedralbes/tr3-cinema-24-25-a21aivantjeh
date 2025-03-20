@@ -17,14 +17,12 @@
             </div>
             <button type="submit" class="bg-blue-500 ">Crear usuario</button>
         </form>
+        <NuxtLink to="/user/login">Login</NuxtLink>
     </div>
 </template>
 
 <script setup>
-import { registerUser } from '../services/communicationManager';
-import { useAuthStore } from '~/store/authStore';
-
-const authStore = useAuthStore();
+import { registerUser } from '../../services/communicationManager';
 
 const name = ref('');
 const email = ref('');
@@ -41,8 +39,10 @@ async function registerForm() {
         };
 
         console.log('Enviando formulario de registro', userData);
-        const response = await registerUser(userData, authStore.token);
-        console.log('Formulario de registro enviado', response);
+        const response = await registerUser(userData);
+
+        console.log('Respuesta del servidor:', response);
+        navigateTo('/profile');
     } catch (error) {
         errorMessage.value = error.message || 'Hubo un problema al registrar el usuario';
         console.log('Error al enviar el formulario de registro', error);

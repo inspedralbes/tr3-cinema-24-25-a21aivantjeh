@@ -15,5 +15,6 @@ Route::get('/movies', [MovieController::class, 'index']);
 Route::get('/coming-soon', [MovieController::class, 'upcomingMovies']);
 
 Route::post('/register', [UserController::class, 'store']);
+Route::post('/login', [UserController::class, 'login']);
 
 Route::get('/showtimes', [ShowtimeController::class, 'index']);

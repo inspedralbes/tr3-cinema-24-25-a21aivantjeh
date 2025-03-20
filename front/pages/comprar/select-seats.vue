@@ -1,14 +1,13 @@
 <template>
     <div class="min-h-screen bg-gray-900 text-white p-4 md:p-6">
-        <!-- Movie Info Bar -->
         <div class="bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 mb-6 flex items-center justify-between">
             <div class="flex items-center gap-4 w-full">
-                <div class="w-12 h-16 md:w-16 md:h-20 rounded-md">
+                <div class="w-12 h-16 rounded-md">
                     <img :src="movieData.poster" :alt="movieData.title" class="w-full h-full object-cover" />
                 </div>
                 <div class="flex w-full justify-between gap-2">
                     <div class="w-[70%]">
-                        <h3 class="font-bold text-lg md:text-xl">{{ movieData.title }}</h3>
+                        <h3 class="font-bold text-lg">{{ movieData.title }}</h3>
                         <p class="text-sm text-gray-300">{{ movieData.dia.date }} · {{ movieData.hora.time }}</p>
                     </div>
                     <div>
@@ -20,14 +19,13 @@
 
         <div class="flex flex-col gap-5">
             <h2 class="text-2xl font-bold text-center">Selecciona tus asientos</h2>
-    
             <div class="flex justify-center gap-6">
                 <div class="flex items-center gap-2">
-                    <div class="w-4 h-4 rounded-sm bg-green-500"></div>
+                    <div class="w-4 h-4 rounded-sm bg-gray-500"></div>
                     <span class="text-sm">Disponible</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <div class="w-4 h-4 rounded-sm bg-blue-500"></div>
+                    <div class="w-4 h-4 rounded-sm bg-green-400"></div>
                     <span class="text-sm">Seleccionado</span>
                 </div>
                 <div class="flex items-center gap-2">
@@ -35,7 +33,7 @@
                     <span class="text-sm">Ocupado</span>
                 </div>
             </div>
-    
+
             <div class="flex flex-col gap-3">
                 <div class="h-6 bg-gray-600/30 rounded-t-full mx-auto w-4/5"></div>
                 <div class="text-center text-sm text-gray-400">PANTALLA</div>
@@ -45,30 +43,31 @@
             </div>
             <div class="max-w-3xl mx-auto mt-6 mb-8">
                 <div
-                    class="grid grid-cols-8 md:grid-cols-10 gap-2 p-5 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700">
+                    class="grid grid-cols-10 gap-2 p-5 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700">
                     <button v-for="asiento in asientos" :key="asiento.id" :class="[
-                        'w-8 h-8 md:w-10 md:h-10 rounded-md flex items-center justify-center transition-all text-sm',
-                        asiento.reservado ? 'bg-red-500 cursor-not-allowed opacity-70' :
-                            asientosSeleccionados.includes(asiento.id) ? 'bg-blue-500 ring-2 ring-blue-300' : 'bg-green-500 hover:bg-green-600'
+                        'size-7 rounded-md flex items-center justify-center transition-all text-sm',
+                        asiento.reservado ? 'seat-reserved cursor-not-allowed opacity-70' :
+                            asientosSeleccionados.includes(asiento) ? 'seat-selected ring-2' : 'seat-available hover:ring-2'
                     ]" :disabled="asiento.reservado" @click="toggleAsiento(asiento)">
-                        {{ asiento.numero }}
+                        {{ asiento.columna }}
                     </button>
                 </div>
             </div>
         </div>
 
 
-        <!-- Selected Seats Summary -->
         <div class="max-w-3xl mx-auto">
             <div v-if="asientosSeleccionados.length > 0"
                 class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-5 mb-6 border border-gray-700">
-                <h3 class="font-bold text-lg mb-3">Asientos Seleccionados</h3>
+                <h3 class="font-bold text-lg mb-3">Asientos Seleccionados
+                    <span class="text-sm text-gray-400">(Fila - Columna)</span>
+                </h3>
 
                 <div class="flex flex-wrap gap-2 mb-4">
-                    <span v-for="id in asientosSeleccionados" :key="id"
+                    <span v-for="asiento in asientosSeleccionados" :key="asiento.id"
                         class="px-3 py-1 bg-blue-600 rounded-md text-sm flex items-center gap-1">
-                        Asiento {{ id }}
-                        <button @click="removeAsiento(id)"
+                        Fil: {{ asiento.fila }} Col: {{ asiento.columna }}
+                        <button @click="removeAsiento(asiento)"
                             class="text-xs bg-blue-800 rounded-full w-4 h-4 flex items-center justify-center">×</button>
                     </span>
                 </div>
@@ -85,70 +84,126 @@
                 </div>
             </div>
 
-            
+
             <button v-if="asientosSeleccionados.length > 0" @click="confirmarAsientos"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-colors">
                 Continuar al pago ({{ asientosSeleccionados.length }} asiento{{ asientosSeleccionados.length > 1 ? 's' :
-                '' }})
+                    '' }})
             </button>
-            
+
             <p v-else class="text-center text-gray-400">
                 Selecciona al menos un asiento para continuar
             </p>
-            <div class="flex justify-center text-blue-900 hover:text-red-500 hover:underline"  @click="confirmarCancelacion()">
+            <div class="flex justify-center text-blue-900 hover:text-red-500 hover:underline"
+                @click="confirmarCancelacion()">
                 <p>Cancelar</p>
             </div>
         </div>
     </div>
 </template>
 
+<style>
+.seat-reserved {
+    background-color: #fb2c36;
+}
+
+.seat-available {
+    background-color: #6a7282;
+}
+
+.seat-available:hover {
+    background-color: #2b2b2b;
+}
+
+.seat-selected {
+    background-color: #05d472;
+}
+</style>
+
 <script setup>
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '~/store/authStore';
+
 const route = useRoute();
 const router = useRouter();
 
-// Parse movie data from route
 const movieData = JSON.parse(decodeURIComponent(route.query.data || '{}'));
 
-// Create seating layout
-const asientos = ref([...Array(40)].map((_, i) => ({
-    id: i + 1,
-    numero: i + 1,
-    reservado: Math.random() > 0.7 // Simulate some seats being already reserved
-})));
+const filas = 12;
+const columnas = 10;
+const maxSeats = 10;
+
+const asientos = ref([]);
+
+for (let fila = 1; fila <= filas; fila++) {
+    for (let columna = 1; columna <= columnas; columna++) {
+        asientos.value.push({
+            id: (fila - 1) * 10 + columna,
+            fila: fila,
+            columna: columna,
+            reservado: Math.random() > 0.7
+        });
+    }
+}
 
 const asientosSeleccionados = ref([]);
 
 const toggleAsiento = (asiento) => {
-    if (!asiento.reservado) {
-        if (asientosSeleccionados.value.includes(asiento.id)) {
-            asientosSeleccionados.value = asientosSeleccionados.value.filter(id => id !== asiento.id);
+    const index = asientosSeleccionados.value.findIndex(a => a.id === asiento.id);
+    if (index !== -1) {
+        asientosSeleccionados.value.splice(index, 1);
+    } else {
+        if (asientosSeleccionados.value.length < maxSeats) {
+            asientosSeleccionados.value.push(asiento);
         } else {
-            asientosSeleccionados.value.push(asiento.id);
+            alert("No puedes seleccionar más de 10 asientos");
         }
     }
 };
 
-const removeAsiento = (id) => {
-    asientosSeleccionados.value = asientosSeleccionados.value.filter(asientoId => asientoId !== id);
+const removeAsiento = (asiento) => {
+    const index = asientosSeleccionados.value.findIndex(a => a.id === asiento.id);
+    if (index !== -1) {
+        asientosSeleccionados.value.splice(index, 1);
+    }
 };
 
 const confirmarAsientos = () => {
-    router.push({
-        path: "/pago",
-        query: {
-            data: encodeURIComponent(JSON.stringify({
-                ...movieData,
-                asientos: asientosSeleccionados.value
-            }))
-        }
-    });
+    const authStore = useAuthStore();
+    const usuarioAutenticado = authStore?.user || JSON.parse(localStorage.getItem("user"));
+    const asientosFiltrados = asientosSeleccionados.value.map(({ reservado, ...asiento }) => asiento);
+
+    const movieDataWithSeats = {
+        ...movieData,
+        asientos: asientosFiltrados
+    };
+
+    const encodedData = encodeURIComponent(JSON.stringify(movieDataWithSeats));
+    // console.log("MovieData:", movieDataWithSeats);
+
+    if (!usuarioAutenticado) {
+        // Navega a una pagina sin necesidad de autenticacion
+        navigateTo({
+            path: "/comprar/tickets-noacc",
+            query: {
+                data: encodedData
+            }
+        });
+    } else {
+        navigateTo({
+            path: "/comprar/tickets",
+            query: {
+                data: encodedData
+            }
+        });
+    }
 };
 
 const confirmarCancelacion = () => {
-  if (confirm("¿Estás seguro de que quieres cancelar?")) {
-    console.log("Acción cancelada"); 
-    router.push('/');
-  }
+    if (confirm("¿Estás seguro de que quieres cancelar?")) {
+        console.log("Acción cancelada");
+        router.push('/');
+    }
 };
 </script>

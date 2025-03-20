@@ -1,3 +1,5 @@
+import { useAuthStore } from "../store/authStore";
+
 const config = useRuntimeConfig();
 const HOST = config.public.API_URL;
 
@@ -67,8 +69,9 @@ export async function getUpcomingMovies() {
     }
 }
 
-export async function registerUser(userData, token) {
+export async function registerUser(userData) {
     const URL = `${HOST}/register`;
+    const authStore = useAuthStore();
 
     try {
         const response = await fetch(URL, {
@@ -86,11 +89,67 @@ export async function registerUser(userData, token) {
             throw new Error(errorData?.message || "Error al registrar el usuario"); 
         }
         
+        const data = await response.json();
+        authStore.login(data.user, data.user.token);
         alert("Usuario registrado correctamente");
-        window.location.href = '/';
+        return data;
 
     } catch (error) {
         // console.error("Error al registrar el usuario:", error);
         throw error;
     }
+}
+
+export async function loginUser(userData) {
+    const URL = `${HOST}/login`;
+
+    try {
+        const response = await fetch (URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(userData),
+        });
+
+        if(!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData?.message || "Error al hacer el login del usuario"); 
+        }
+
+        const data = await response.json();
+        alert("Usuari logeado con exito!")
+        return data;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function comprarTicket(ticketDetails) {
+    const URL = `${HOST}/buy-ticket`;
+    console.log("Ticket details:", ticketDetails);
+
+    // try {
+    //     const response = await fetch(URL, {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Accept": "application/json"
+    //         },
+    //         body: JSON.stringify(ticketDetails),
+    //     });
+
+    //     if (!response.ok) {
+    //         const errorData = await response.json();  
+    //         throw new Error(errorData?.message || "Error al comprar el ticket"); 
+    //     }
+        
+    //     const data = await response.json();
+    //     return data;
+
+    // } catch (error) {
+    //     throw error;
+    // }
 }
