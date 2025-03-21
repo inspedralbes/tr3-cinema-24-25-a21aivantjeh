@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('showtime_id')->references('id')->on('showtimes')->onDelete('cascade');
             $table->integer('fila');
             $table->integer('columna');
+            $table->string('ticket_id')->nullable();
             $table->timestamps();
         });
     }

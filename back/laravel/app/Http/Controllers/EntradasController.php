@@ -69,15 +69,18 @@ class EntradasController extends Controller
         try {
             $validatedData = $request->validate([
                 'email' => 'required|email',
-                'movieData.title' => 'required|string',
-                'movieData.dia.id' => 'required|exists:showtimes,id',
-                'movieData.asientos' => 'required|array|min:1',
-                'movieData.asientos.*.fila' => 'required|integer',
-                'movieData.asientos.*.columna' => 'required|integer',
+                'movieData' => 'required|array',
+                // 'movieData.title' => 'required|string',
+                // 'movieData.dia.id' => 'required|exists:showtimes,id',
+                // 'movieData.asientos' => 'required|array|min:1',
+                // 'movieData.asientos.*.fila' => 'required|integer',
+                // 'movieData.asientos.*.columna' => 'required|integer',
             ]);
             
             $showtimeId = $validatedData['movieData']['dia']['id'];
             $asientos = $validatedData['movieData']['asientos'];
+            $movieTitle = $validatedData['movieData']['title'];
+            $movie = $validatedData['movieData'];
             
             $ocupados = Entradas::where('showtime_id', $showtimeId)
                 ->where(function($query) use ($asientos) {
@@ -110,15 +113,15 @@ class EntradasController extends Controller
                 ]);
             }
             
-            $subject = $validatedData['movieData']['title'] . " - Entradas Compradas";
+            $subject = $movieTitle . " - Entradas Compradas";
             $message = "Hola, tu compra ha sido realizada con éxito.";
             $to = $validatedData['email'];
             
             $sendMailController = new PHPMailerController();
-            $emailSent = $sendMailController->sendEntradas(new Request([
+            $emailSent = $sendMailController->sendEntrada(new Request([
                 'subject' => $subject,
                 'message' => $message,
-                'movie' => $validatedData['movieData'],
+                'movie' => $movie,
                 'to' => [$to],
             ]));
             

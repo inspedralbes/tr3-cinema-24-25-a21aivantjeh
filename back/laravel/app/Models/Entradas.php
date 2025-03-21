@@ -12,5 +12,6 @@ class Entradas extends Model
         'showtime_id',
         'fila',
         'columna',
+        'ticket_id',
     ];
 }
