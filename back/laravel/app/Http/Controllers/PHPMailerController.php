@@ -76,4 +76,82 @@ class PHPMailerController extends Controller
             ], 500);
         }
     }
+
+    public function sendEntradas(Request $request)
+    {
+        $validatedData = $request->validate([
+            'subject' => 'required|string',
+            'message' => 'required|string',
+            'to' => 'required|array',
+            'to.*' => 'required|email',
+            'movie' => 'required|array',
+            'user' => 'nullable|array',
+            'user.name' => 'nullable|string',
+            'user.surname' => 'nullable|string',
+        ]);
+
+        $mail = new PHPMailer(true);
+
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->CharSet = 'UTF-8';
+            $mail->Host = env("MAIL_HOST");
+            $mail->SMTPAuth = true;
+            $mail->Username = env("MAIL_USERNAME");
+            $mail->Password = env("MAIL_PASSWORD");
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+            $mail->SMTPDebug = 2; // Enable verbose debug output for troubleshooting
+
+            $mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                ]
+            ];
+
+            $mail->setFrom('a21aivantjeh@inspedralbes.cat', 'TaquillaXpress');
+
+            // Recipients - add each recipient directly instead of BCC
+            foreach ($validatedData['to'] as $recipient) {
+                $mail->addAddress($recipient);
+            }
+
+            // Copy for monitoring (optional)
+            // $mail->addBCC('a21aivantjeh@inspedralbes.cat', 'Admin');
+
+            // Content
+            $htmlContent = View::make('tickets', [
+                'movieData' => $validatedData['movie'],
+                'subject' => $validatedData['subject'],
+                'message' => $validatedData['message'],
+                'ticketDetails' => $validatedData['movie']['asientos'],
+                // Use proper user name extraction if available
+                'user' => isset($validatedData['to'][0]) ? explode('@', $validatedData['to'][0])[0] : 'Cliente'
+            ])->render();
+
+            dd($htmlContent);
+
+            $mail->isHTML(true);
+            $mail->Subject = $validatedData['subject'];
+            $mail->Body = $htmlContent;
+
+            // Send the email
+            $mail->send();
+
+            if (!$mail->send()) {
+                return response()->json([
+                    'error' => "Error sending email: {$mail->ErrorInfo}"
+                ], 500);
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => "Error sending email: {$mail->ErrorInfo}"
+            ], 500);
+        }
+    }
 }

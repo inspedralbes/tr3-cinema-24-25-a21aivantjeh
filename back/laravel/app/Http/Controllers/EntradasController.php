@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Entradas;
 use Illuminate\Http\Request;
+use App\Http\Controllers\PHPMailerController;
 
 class EntradasController extends Controller
 {
@@ -68,42 +69,70 @@ class EntradasController extends Controller
         try {
             $validatedData = $request->validate([
                 'email' => 'required|email',
+                'movieData.title' => 'required|string',
                 'movieData.dia.id' => 'required|exists:showtimes,id',
                 'movieData.asientos' => 'required|array|min:1',
                 'movieData.asientos.*.fila' => 'required|integer',
                 'movieData.asientos.*.columna' => 'required|integer',
             ]);
-
+            
             $showtimeId = $validatedData['movieData']['dia']['id'];
             $asientos = $validatedData['movieData']['asientos'];
-
+            
             $ocupados = Entradas::where('showtime_id', $showtimeId)
-                ->whereIn('fila', array_column($asientos, 'fila'))
-                ->whereIn('columna', array_column($asientos, 'columna'))
-                ->get(['fila', 'columna']);
-
+                ->where(function($query) use ($asientos) {
+                    foreach($asientos as $asiento) {
+                        $query->orWhere(function($q) use ($asiento) {
+                            $q->where('fila', $asiento['fila'])
+                            ->where('columna', $asiento['columna']);
+                        });
+                    }
+                })->get(['fila', 'columna']);
+            
             if ($ocupados->isNotEmpty()) {
                 $ocupadosDetails = $ocupados->map(function ($asiento) {
                     return 'Fila: ' . $asiento->fila . ' - Columna: ' . $asiento->columna;
                 });
-
+                
                 return response()->json([
                     'error' => 'Algunos asientos ya están ocupados.',
                     'asientos_ocupados' => $ocupadosDetails
                 ], 409);
             }
-
+            
             foreach ($asientos as $asiento) {
                 Entradas::create([
-                    'user_id' => null, 
+                    'user_id' => null,
                     'user_email' => $validatedData['email'],
                     'showtime_id' => $showtimeId,
                     'fila' => $asiento['fila'],
                     'columna' => $asiento['columna'],
                 ]);
             }
-
-            return response()->json(['message' => 'Tickets comprados con éxito'], 201);
+            
+            $subject = $validatedData['movieData']['title'] . " - Entradas Compradas";
+            $message = "Hola, tu compra ha sido realizada con éxito.";
+            $to = $validatedData['email'];
+            
+            $sendMailController = new PHPMailerController();
+            $emailSent = $sendMailController->sendEntradas(new Request([
+                'subject' => $subject,
+                'message' => $message,
+                'movie' => $validatedData['movieData'],
+                'to' => [$to],
+            ]));
+            
+            if (!$emailSent) {
+                return response()->json([
+                    'status' => 'warning',
+                    'message' => 'Tickets comprados pero hubo un problema al enviar el email'
+                ], 201);
+            } else {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Tickets comprados y email enviado con éxito'
+                ], 201);
+            }
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'error' => 'Error de validación',
