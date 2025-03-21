@@ -103,7 +103,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { comprarTicket } from "../../services/communicationManager";
+import { comprarTicketNoAcc } from "../../services/communicationManager";
 
 const route = useRoute();
 const movieData = ref(JSON.parse(decodeURIComponent(route.query.data || '{}')));
@@ -123,7 +123,8 @@ async function ticketForm() {
         movieData: movieData.value 
     });
 
-    const response = await comprarTicket(data);
+    const response = await comprarTicketNoAcc(data);
+
     
     
     const successElement = document.createElement('div');

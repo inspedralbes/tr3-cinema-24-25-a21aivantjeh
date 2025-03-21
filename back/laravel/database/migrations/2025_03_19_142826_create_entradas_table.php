@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('entradas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('user_email');
             $table->unsignedBigInteger('showtime_id');
             $table->foreign('showtime_id')->references('id')->on('showtimes')->onDelete('cascade');
             $table->integer('fila');

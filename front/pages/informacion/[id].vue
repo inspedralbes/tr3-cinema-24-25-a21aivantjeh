@@ -16,12 +16,10 @@
     </NuxtLink>
     <div class="w-full h-full flex flex-col gap-5 pb-17 relative">
         <div class="w-full h-58 flex p-3 py-8 gap-5">
-            <!-- Imagen -->
             <div class="w-2/5 flex items-center">
                 <img :src="movieData.poster" alt="Logo" class="w-full h-auto rounded-lg shadow-lg">
             </div>
 
-            <!-- Información -->
             <div class="w-3/5 flex flex-col justify-center overflow-hidden gap-1.5">
                 <div class="flex gap-2 items-center">
                     <p class="text-xs">{{ movieData.rating }}</p>
@@ -35,12 +33,10 @@
                     {{ movieData.title }}
                 </p>
                 <div class="flex flex-wrap gap-2 pt-3">
-                    <!-- Clasificación -->
                     <p class="text-sm bg-red-600 text-white font-semibold rounded-full px-3 py-1">
                         {{ movieData.rated }}
                     </p>
 
-                    <!-- Géneros -->
                     <p v-for="g in movieData.genre.split(', ')" :key="g"
                         class="text-sm bg-amber-500 text-black font-semibold rounded-full px-3 py-1">
                         {{ g }}
@@ -58,7 +54,6 @@
                 <div v-else class="grid justify-center items-center text-center gap-1 text-white/50 bg-gray-700 p-8">
                     <p>No hay trailer disponible, pero puedes buscarlo en YouTube:</p>
 
-                    <!-- Buscar en YouTube en proceso -->
                     <a :href="'https://www.youtube.com/results?search_query=' + movieData.title.replace(/\s+/g, '+') + '+trailer'"
                         target="_blank" class="text-blue-400 hover:underline flex items-center justify-center gap-2">
                         Buscar en YouTube
@@ -109,7 +104,6 @@
         </div>
     </div>
 
-    <!-- <comprar[id] /> -->
     <comprar[id] :movieDetalles="movieDetalles" v-if="movieDetalles.showing_dates" />
 </template>
 

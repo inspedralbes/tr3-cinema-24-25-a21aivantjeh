@@ -66,7 +66,7 @@
                 <div class="flex flex-wrap gap-2 mb-4">
                     <span v-for="asiento in asientosSeleccionados" :key="asiento.id"
                         class="px-3 py-1 bg-blue-600 rounded-md text-sm flex items-center gap-1">
-                        Fil: {{ asiento.fila }} Col: {{ asiento.columna }}
+                        Fila: {{ asiento.fila }} Col: {{ asiento.columna }}
                         <button @click="removeAsiento(asiento)"
                             class="text-xs bg-blue-800 rounded-full w-4 h-4 flex items-center justify-center">×</button>
                     </span>

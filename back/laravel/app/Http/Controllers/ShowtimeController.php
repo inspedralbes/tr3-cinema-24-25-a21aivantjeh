@@ -29,6 +29,7 @@ class ShowtimeController extends Controller
 
             if (!isset($groupedShowtimes[$movieId]['showing_dates'][$date])) {
                 $groupedShowtimes[$movieId]['showing_dates'][$date] = [
+                    'id' => $showtime->id,  
                     'date' => $date,
                     'showtimes' => []
                 ];

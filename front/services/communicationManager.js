@@ -127,29 +127,29 @@ export async function loginUser(userData) {
     }
 }
 
-export async function comprarTicket(ticketDetails) {
-    const URL = `${HOST}/buy-ticket`;
+export async function comprarTicketNoAcc(ticketDetails) {
+    const URL = `${HOST}/buy-tickets-noacc`;
     console.log("Ticket details:", ticketDetails);
 
-    // try {
-    //     const response = await fetch(URL, {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             "Accept": "application/json"
-    //         },
-    //         body: JSON.stringify(ticketDetails),
-    //     });
+    try {
+        const response = await fetch(URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(ticketDetails),
+        });
 
-    //     if (!response.ok) {
-    //         const errorData = await response.json();  
-    //         throw new Error(errorData?.message || "Error al comprar el ticket"); 
-    //     }
+        if (!response.ok) {
+            const errorData = await response.json();  
+            throw new Error(errorData?.message || "Error al comprar el ticket"); 
+        }
         
-    //     const data = await response.json();
-    //     return data;
+        const data = await response.json();
+        return data;
 
-    // } catch (error) {
-    //     throw error;
-    // }
+    } catch (error) {
+        throw error;
+    }
 }
