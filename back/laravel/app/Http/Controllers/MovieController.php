@@ -80,36 +80,21 @@ class MovieController extends Controller
         try {
             // Validar los datos
             $validatedData = $request->validate([
-                // 'title' => 'string|max:255',
-                // 'description' => 'string',
-                // 'genre' => 'string|max:255',
-                // 'year' => 'integer|min:1800|max:' . date('Y'),
-                // 'rating' => 'numeric|min:0|max:10',
-                // 'duration' => 'integer|min:1',
-                // 'director' => 'string|max:255',
-                // 'producers' => 'string',
-                // 'cast' => 'string',
-                // 'classification' => 'string|max:50',
-                // 'language' => 'string|max:100',
-                // 'release_date' => 'date',
-                // 'poster' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                // 'video' => 'url',
-                // 'country' => 'string|max:255',
-                'title',
-                'description',
-                'genre',
-                'year',
-                'rating',
-                'duration',
-                'director',
-                'writer',
-                'cast',
-                'rated',
-                'language',
-                'release_date',
-                'poster',
-                'trailer',
-                'country',
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'genre' => 'nullable|string',
+                'year' => 'nullable|string',
+                'rating' => 'nullable|string',
+                'duration' => 'nullable|string',
+                'director' => 'nullable|string',
+                'writer' => 'nullable|string',
+                'cast' => 'nullable|string',
+                'rated' => 'nullable|string',
+                'language' => 'nullable|string',
+                'release_date' => 'nullable|date_format:Y-m-d',
+                'poster' => 'nullable|mimes:jpeg,png,jpg,svg|max:2048',
+                'trailer' => 'nullable|url',
+                'country' => 'nullable|string',
             ]);
 
             // Subir la imagen del poster si se envía
@@ -121,26 +106,38 @@ class MovieController extends Controller
 
             // Guardar en la base de datos
             Movie::create([
-                'title' => $request['title'],
-                'description' => $request['description'],
-                'genre' => $request['genre'],
-                'year' => $request['year'],
-                'rating' => $request['rating'],
-                'duration' => $request['duration'],
-                'director' => $request['director'],
-                'writer' => $request['writer'],
-                'cast' => $request['cast'],
-                'rated' => $request['rated'],
-                'language' => $request['language'],
-                'release_date' => $request['release_date'],
+                'title' => $validatedData['title'],
+                'description' => $validatedData['description'],
+                'genre' => $validatedData['genre'],
+                'year' => $validatedData['year'],
+                'rating' => $validatedData['rating'],
+                'duration' => $validatedData['duration'],
+                'director' => $validatedData['director'],
+                'writer' => $validatedData['writer'],
+                'cast' => $validatedData['cast'],
+                'rated' => $validatedData['rated'],
+                'language' => $validatedData['language'],
+                'release_date' => $validatedData['release_date'],
                 'poster' => $posterPath, // Guardar la ruta del poster
-                'trailer' => $request['trailer'],
-                'country' => $request['country'],
+                'trailer' => $validatedData['trailer'],
+                'country' => $validatedData['country'],
             ]);
 
             return redirect()->route('dashboard.peliculas')->with('success', 'Película creada con éxito');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Hubo un error al crear la película: ' . $e->getMessage());
         }
+    }
+
+    public function destroyAdmin(string $id)
+    {
+        $movie = Movie::find($id);
+        if (!$movie) {
+            return response()->json(['error' => 'Pelicula no encontrada'], 404);
+        }
+
+        $movie->delete();
+
+        return response()->json(['success' => 'Pelicula eliminada correctamente.']);
     }
 }

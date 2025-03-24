@@ -37,8 +37,8 @@
                         {{ movieData.rated }}
                     </p>
 
-                    <p v-for="g in movieData.genre.split(', ')" :key="g"
-                        class="text-sm bg-amber-500 text-black font-semibold rounded-full px-3 py-1">
+                    <p v-for="g in (movieData.genre && movieData.genre.includes(',') ? movieData.genre.split(', ') : [movieData.genre])"
+                        :key="g" class="text-sm bg-amber-500 text-black font-semibold rounded-full px-3 py-1">
                         {{ g }}
                     </p>
                 </div>

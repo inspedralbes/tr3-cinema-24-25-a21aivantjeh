@@ -30,8 +30,15 @@
                             class="block text-sm font-semibold text-gray-700">{{ $label }}</label>
                         <input type="text" id="{{ $field }}" name="{{ $field }}"
                             class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F46036]"
-                            value="{{ old($field) }}" placeholder="Ingrese {{ strtolower($label) }}">
-
+                            value="{{ old($field) }}"
+                            placeholder="@php
+                                if ($label === 'Género') echo 'Action, Drama, Thriller';
+                                elseif ($label === 'Año') echo 'AAAA';
+                                elseif ($label === 'Calificación') echo '0-10';
+                                elseif ($label === 'Duración') echo 'min';
+                                elseif ($label === 'Clasificación') echo 'PG, PG-13, R';
+                                elseif ($label === 'Fecha de Estreno') echo 'YYYY-MM-DD';
+                                else echo 'Ingrese ' . strtolower($label); @endphp">
                         @error($field)
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror

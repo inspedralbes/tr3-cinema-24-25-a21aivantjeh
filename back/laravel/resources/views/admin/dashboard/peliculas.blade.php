@@ -37,7 +37,7 @@
                                 <a href="{{ route('dashboard.actualizarPelicula', $movie) }}"
                                     class="flex items-center gap-1 rounded-full bg-[#2A9134] px-3 py-1 text-white text-sm">Editar</a>
                                 <button class="rounded-full bg-[#D7263D] px-3 py-1 text-white"
-                                    onclick="deleteUser('{{ $movie->id }}')">
+                                    onclick="deletePelicula('{{ $movie->id }}')">
                                     Eliminar
                                 </button>
                             </td>
@@ -48,45 +48,45 @@
         </div>
     </div>
 
-    {{-- <script>
-        function updateUser(userId) {
-            const name = document.getElementById(`name-${userId}`).value;
-            const email = document.getElementById(`email-${userId}`).value;
-            const password = document.getElementById(`password-${userId}`).value;
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    <script>
+        // function updateUser(userId) {
+        //     const name = document.getElementById(`name-${userId}`).value;
+        //     const email = document.getElementById(`email-${userId}`).value;
+        //     const password = document.getElementById(`password-${userId}`).value;
+        //     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            fetch(`/dashboard/usuarios/${userId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                    },
-                    body: JSON.stringify({
-                        name,
-                        email,
-                        password
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Usuario actualizado correctamente.');
-                        window.location.reload();
-                    } else {
-                        alert('Error al actualizar el usuario.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Hubo un error al actualizar el usuario.');
-                });
-        }
+        //     fetch(`/dashboard/usuarios/${userId}`, {
+        //             method: 'PUT',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRF-TOKEN': csrfToken,
+        //             },
+        //             body: JSON.stringify({
+        //                 name,
+        //                 email,
+        //                 password
+        //             }),
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 alert('Usuario actualizado correctamente.');
+        //                 window.location.reload();
+        //             } else {
+        //                 alert('Error al actualizar el usuario.');
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //             alert('Hubo un error al actualizar el usuario.');
+        //         });
+        // }
 
-        function deleteUser(userId) {
-            if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+        function deletePelicula(movieId) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta pelicula?')) {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                fetch(`/dashboard/usuarios/${userId}`, {
+                fetch(`/dashboard/pelicula/${movieId}`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -96,17 +96,17 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert('Usuario eliminado correctamente.');
+                            alert('Pelicula eliminada correctamente.');
                             window.location.reload();
                         } else {
-                            alert('Error al eliminar el usuario.');
+                            alert('Error al eliminar la pelicula.');
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Hubo un error al eliminar el usuario.');
+                        alert('Hubo un error al eliminar la pelicula.');
                     });
             }
         }
-    </script> --}}
+    </script>
 @endsection
