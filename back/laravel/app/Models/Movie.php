@@ -17,14 +17,15 @@ class Movie extends Model
         'rating',
         'duration',
         'director',
-        'producers',
+        'writer',
         'cast',
-        'classification',
+        'rated',
         'language',
         'release_date',
-        'image',
+        'poster',
         'video',
         'country',
+
     ];
 
     public function showtimes()

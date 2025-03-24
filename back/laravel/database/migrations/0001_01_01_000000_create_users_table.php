@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['user', 'admin'])->default('user'); // Para diferenciar admins y usuarios
+            $table->boolean('is_admin')->default(false); // Campo para identificar administradores
             $table->rememberToken();
             $table->timestamps();
         });

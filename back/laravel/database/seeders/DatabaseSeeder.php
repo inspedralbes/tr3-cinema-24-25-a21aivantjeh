@@ -71,6 +71,7 @@ class DatabaseSeeder extends Seeder
         echo "Seeder completo!\n";
         $this->call([
             ShowtimeSeeder::class,
+            AdminSeeder::class
         ]);
     }
 }

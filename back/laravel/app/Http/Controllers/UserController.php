@@ -41,7 +41,8 @@ class UserController extends Controller
             $user = User::create([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
-                'password' => bcrypt($validatedData['password']),
+                // 'password' => bcrypt($validatedData['password']),
+                'password' => Hash::make($validatedData['password']),
             ]);
 
             Auth::login($user);
@@ -108,18 +109,19 @@ class UserController extends Controller
                 ], 404);
             }
 
-            if (!Auth::attempt($validatedData)) {
+            if (!Hash::check($validatedData['password'], $user->password)) {
                 return response()->json([
-                    'message' => 'Invalid credentials'
+                    'message' => 'Credenciales incorrectas'
                 ], 401);
             }
 
-            $user = Auth::user();
+            Auth::login($user);
+
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Login successful',
+                'message' => 'Login exitoso',
                 'user' => [
                     'id' => $user->id,
                     'name' => $user->name,
@@ -130,7 +132,7 @@ class UserController extends Controller
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'An error occurred, please try again later.',
+                'message' => 'Ocurrió un error, intenta nuevamente más tarde.',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -163,8 +165,76 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroyAdmin(string $id)
     {
-        //
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'Usuari no encontrado'], 404);
+        }
+
+        $user->delete();
+
+        return response()->json(['success' => 'Usuari eliminat correctament.']);
+    }
+
+    public function indexAdmin()
+    {
+        $users = User::where('is_admin', false)->get();
+        return view('admin.dashboard.usuarios', compact('users'));
+    }
+
+    public function updateAdmin(Request $request, string $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'Usuari no encontrado'], 404);
+        }
+
+        $updateData = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+        ];
+
+        if ($request->filled('password')) {
+            // $updateData['password'] = bcrypt($request->input('password'));
+            $updateData['password'] = Hash::make($request->input('password'));
+        }
+
+        $user->update($updateData);
+
+        return response()->json(['success' => 'Usuari actualitzat correctament.']);
+    }
+
+    public function storeAdmin(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|string|min:8',
+            ]);
+
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
+            ]);
+
+            $subject = "Benvingut a la nostra plataforma!";
+            $message = "Hola " . $user->name . ", aquest és el missatge de confirmació per a la teva inscripció a la nostra plataforma.";
+            $to = $user->email;
+
+            $sendMailController = new PHPMailerController();
+            $response = $sendMailController->sendEmail(new Request([
+                'subject' => $subject,
+                'message' => $message,
+                'to' => [$to],
+                'user' => ['name' => $user->name, 'surname' => $user->surname]
+            ]));
+
+            return redirect()->route('dashboard.usuarios')->with('success', 'Usuario creado con éxito');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el usuario: ' . $e->getMessage());
+        }
     }
 }
