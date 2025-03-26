@@ -69,7 +69,7 @@ class EntradasController extends Controller
     public function storeEntrada(Request $request)
     {
         try {
-            // Validate input
+            // Log::info('Entrada store request EntradaController', $request->all());
             $data = $request->validate([
                 'email' => 'required|email',
                 'movieData' => 'required|array',
@@ -80,8 +80,8 @@ class EntradasController extends Controller
 
             $showtimeId = $data['movieData']['dia']['id'];
             $asientos = $data['movieData']['asientos'];
+            $movieData = $request->input('movieData');
 
-            // Check for occupied seats
             $ocupados = Entradas::where('showtime_id', $showtimeId)
                 ->where(function ($query) use ($asientos) {
                     foreach ($asientos as $asiento) {
@@ -92,7 +92,6 @@ class EntradasController extends Controller
                     }
                 })->get(['fila', 'columna']);
 
-            // If seats are occupied, return error
             if ($ocupados->isNotEmpty()) {
                 return response()->json([
                     'error' => 'Algunos asientos ya están ocupados.',
@@ -100,7 +99,6 @@ class EntradasController extends Controller
                 ], 409);
             }
 
-            // Book seats
             foreach ($asientos as $asiento) {
                 Entradas::create([
                     'user_email' => $data['email'],
@@ -112,26 +110,27 @@ class EntradasController extends Controller
                 ]);
             }
 
-            // Send confirmation email
             $sendMailController = new PHPMailerController();
-            $sendMailController->sendEntrada(new Request([
+            $mail = $sendMailController->sendEntrada(new Request([
                 'subject' => "{$data['movieData']['title']} - Entradas Compradas",
                 'message' => 'Hola, tu compra ha sido realizada con éxito.',
-                'movie' => $data['movieData'],
                 'to' => $data['email'],
+                'movieData' => $movieData,
             ]));
+
+            Log::info('Resultado del mail: ' . ($mail ? 'Success' : 'Failed'));
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Tickets comprados y email enviado con éxito'
             ], 201);
+
         } catch (ValidationException $e) {
             return response()->json([
                 'error' => 'Error de validación',
                 'detalles' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            // \Log::error('Ticket purchase error: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Error interno del servidor',
                 'mensaje' => 'Inténtalo más tarde',

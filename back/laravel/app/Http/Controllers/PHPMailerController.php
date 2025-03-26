@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Validation\ValidationException;
 
 
 class PHPMailerController extends Controller
@@ -78,16 +79,21 @@ class PHPMailerController extends Controller
     public function sendEntrada(Request $request)
     {
         try {
+            // Log::info('Datos recebidos', $request->all());
             $validatedData = $request->validate([
                 'subject' => 'required|string',
                 'message' => 'required|string',
-                'to' => 'required|email', // Changed from array to single email
-                'user' => 'nullable|array',
-                'movie' => 'required|array',
+                'to' => 'required|email',
+                'movieData' => 'required|array',
+            ]);
+
+            Log::info('Email Send Attempt MailController', [
+                'recipient' => $validatedData['to'],
+                'movieData' => $validatedData['movieData']['title'],
+                'movieData' => $validatedData['movieData']
             ]);
 
             $mail = new PHPMailer(true);
-
             $mail->isSMTP();
             $mail->CharSet = 'UTF-8';
             $mail->Host = env('MAIL_HOST');
@@ -98,29 +104,28 @@ class PHPMailerController extends Controller
             $mail->Port = 587;
 
             $mail->setFrom('a21aivantjeh@inspedralbes.cat', 'TaquillaXpress');
-            $mail->addAddress($validatedData['to']); // Single recipient
+            $mail->addAddress($validatedData['to']);
 
             $htmlContent = View::make('ticket', [
                 'subject' => $validatedData['subject'],
                 'message' => $validatedData['message'],
                 'user' => $validatedData['user'] ?? null,
-                'movieData' => $validatedData['movie'],
-                'ticketDetails' => $validatedData['movie']['asientos'],
-                'usePosterLocal' => true,
+                'movieData' => $validatedData['movieData'],
+                'ticketDetails' => $validatedData['movieData']['asientos'],
             ])->render();
 
             $pdfContent = View::make('pdf.ticket', [
                 'subject' => $validatedData['subject'],
                 'message' => $validatedData['message'],
                 'user' => $validatedData['user'] ?? null,
-                'movieData' => $validatedData['movie'],
-                'ticketDetails' => $validatedData['movie']['asientos'],
+                'movieData' => $validatedData['movieData'],
+                'ticketDetails' => $validatedData['movieData']['asientos'],
             ])->render();
 
             $pdf = Pdf::loadHTML($pdfContent);
             $pdfContentView = $pdf->output();
 
-            $movieTitle = preg_replace('/[^A-Za-z0-9\-]/', '_', $validatedData['movie']['title']);
+            $movieTitle = preg_replace('/[^A-Za-z0-9\-]/', '_', $validatedData['movieData']['title']);
             $pdfFileName = "{$movieTitle}_ticket.pdf";
             $mail->addStringAttachment($pdfContentView, $pdfFileName, 'base64', 'application/pdf');
 
@@ -128,14 +133,36 @@ class PHPMailerController extends Controller
             $mail->Subject = $validatedData['subject'];
             $mail->Body = $htmlContent;
 
-            $mail->send();
+            try {
+                $mail->send();
 
+                Log::info('Mail enviado correctamente', [
+                    'recipient' => $validatedData['to'],
+                    'movieData' => $validatedData['movieData']['title']
+                ]);
+
+                return response()->json([
+                    'message' => 'Email con ticket enviado exitosamente'
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Mail no enviado', [
+                    'recipient' => $validatedData['to'],
+                    'movieData' => $validatedData['movieData']['title'],
+                    'error' => $e->getMessage()
+                ]);
+
+                return response()->json([
+                    'error' => "Error enviando email: " . $e->getMessage()
+                ], 500);
+            }
+        } catch (ValidationException $v) {
             return response()->json([
-                'message' => 'Email con ticket enviado exitosamente'
-            ]);
+                'error' => 'Error de validación',
+                'details' => $v->errors()
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => "Error enviando email: " . $e->getMessage()
+                'error' => "Error inesperado: " . $e->getMessage()
             ], 500);
         }
     }
