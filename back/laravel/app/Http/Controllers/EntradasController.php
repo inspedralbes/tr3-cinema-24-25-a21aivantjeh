@@ -106,7 +106,7 @@ class EntradasController extends Controller
                     'fila' => $asiento['fila'],
                     'columna' => $asiento['columna'],
                     'vip' => $asiento['vip'],
-                    'precio' => $asiento['vip'] ? 8 : 6
+                    'precio' => $asiento['vip'] ? 6 : 8
                 ]);
             }
 

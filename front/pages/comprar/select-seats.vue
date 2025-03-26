@@ -181,7 +181,8 @@ onMounted(async () => {
                     fila,
                     columna,
                     reservado: occupiedSeats.some(seat => seat.fila === fila && seat.columna === columna),
-                    vip: fila === 6
+                    vip: fila === 6,
+                    precio: fila === 6 ? 6 : 8
                 });
             }
         }
@@ -240,5 +241,5 @@ const confirmarCancelacion = () => {
     }
 };
 
-const calcularTotal = () => asientosSeleccionados.value.reduce((total, asiento) => total + (asiento.vip ? 8 : 6), 0);
+const calcularTotal = () => asientosSeleccionados.value.reduce((total, asiento) => total + (asiento.vip ? 6 : 8), 0);
 </script>

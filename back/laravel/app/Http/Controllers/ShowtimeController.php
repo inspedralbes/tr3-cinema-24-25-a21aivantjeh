@@ -38,8 +38,8 @@ class ShowtimeController extends Controller
             $groupedShowtimes[$movieId]['showing_dates'][$date]['showtimes'][] = [
                 'id' => $showtime->id,
                 'time' => $showtime->show_time,
-                'price' => $showtime->price,
-                'is_special_day' => $showtime->is_special_day
+                // 'price' => $showtime->price,
+                // 'is_special_day' => $showtime->is_special_day
             ];
         }
 

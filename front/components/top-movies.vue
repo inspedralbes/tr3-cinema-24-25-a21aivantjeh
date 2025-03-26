@@ -9,7 +9,7 @@
             }">
             <SwiperSlide v-for="movie in movies" :key="movie.movie.id" class="relative" @click="comprarEntradas(movie)">
                 <div class="h-full w-full bg-cover bg-center" :style="{ backgroundImage: `url(${movie.movie.poster})` }">
-                    <div class="absolute inset-[-1px] bg-gradient-to-t from-[#2B4162] via-black/40 to-transparent"></div>
+                    <div class="absolute inset-[-1px] bg-gradient-to-t from-[#101828] via-black/40 to-transparent"></div>
                 </div>
 
                 <div class="absolute bottom-0 left-0 w-full p-6 z-20">

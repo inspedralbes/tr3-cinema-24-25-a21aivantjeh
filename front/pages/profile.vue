@@ -39,6 +39,7 @@
                     <div class="px-4 py-5 sm:p-6">
                         <ul class="divide-y divide-gray-200">
                             <li v-for="(entrada) in misEntradas" :key="entrada.id" class="py-4">
+                                <p class="text-xs text-gray-300 text-end">{{ entrada.showtime.created_at }}</p>
                                 <div class="flex items-center justify-between">
                                     <div class="text-gray-900">
                                         <h4 class="text-sm font-medium">{{ entrada.showtime.movie.title }}</h4>
@@ -51,6 +52,15 @@
                             </li>
                         </ul>
                     </div>
+                </div>
+                <div class="mb-10 flex justify-center items-center">
+                    <a href="https://mail.google.com/mail/u/0/#search/from%3Aa21aivantjeh.inspedralbes.cat"
+                        target="_blank">
+                        <p
+                            class=" text-blue-600 font-medium border-b border-blue-600 cursor-pointer">
+                            Ver entradas de TaquillaXpress
+                </p>
+                    </a>
                 </div>
             </div>
         </main>

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-between items-center bg-gray-800/50 border-b border-gray-700 w-full p-1 mb-5">
+    <div class="flex justify-between items-center bg-gray-800/50 border-b border-gray-700 w-full p-1 px-2 mb-5">
         <img src="../../assets/images/cine.svg" alt="Logo Institut Pedralbes"
             class="size-10 p-1 bg-white rounded-lg border-2 border-black" />
         <p class="text-xl font-bold text-white">TaquillaXpress</p>
@@ -15,7 +15,7 @@
         </div>
     </NuxtLink>
     <div class="w-full h-full flex flex-col gap-5 pb-17 relative">
-        <div class="w-full h-58 flex p-3 py-8 gap-5 bg-gray-900/90">
+        <div class="w-full h-58 flex p-3 py-8 gap-5 bg-gray-800/50">
             <div class="w-2/5 flex items-center">
                 <img :src="movieData.poster" alt="Logo" class="w-full h-auto rounded-lg shadow-lg">
             </div>

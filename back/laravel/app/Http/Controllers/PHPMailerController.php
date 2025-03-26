@@ -79,7 +79,7 @@ class PHPMailerController extends Controller
     public function sendEntrada(Request $request)
     {
         try {
-            // Log::info('Datos recebidos', $request->all());
+            Log::info('Entrada store request data received MailController', $request->all());
             $validatedData = $request->validate([
                 'subject' => 'required|string',
                 'message' => 'required|string',
@@ -87,6 +87,7 @@ class PHPMailerController extends Controller
                 'movieData' => 'required|array',
             ]);
 
+            // Log email attempt
             Log::info('Email Send Attempt MailController', [
                 'recipient' => $validatedData['to'],
                 'movieData' => $validatedData['movieData']['title'],
@@ -136,7 +137,8 @@ class PHPMailerController extends Controller
             try {
                 $mail->send();
 
-                Log::info('Mail enviado correctamente', [
+                // Log successful email
+                Log::info('Email Sent Successfully', [
                     'recipient' => $validatedData['to'],
                     'movieData' => $validatedData['movieData']['title']
                 ]);
@@ -144,23 +146,34 @@ class PHPMailerController extends Controller
                 return response()->json([
                     'message' => 'Email con ticket enviado exitosamente'
                 ]);
-            } catch (\Exception $e) {
-                Log::error('Mail no enviado', [
+            } catch (\Exception $sendException) {
+                // Log email sending failure
+                Log::error('Email Send Failed', [
                     'recipient' => $validatedData['to'],
                     'movieData' => $validatedData['movieData']['title'],
-                    'error' => $e->getMessage()
+                    'error' => $sendException->getMessage()
                 ]);
 
                 return response()->json([
-                    'error' => "Error enviando email: " . $e->getMessage()
+                    'error' => "Error enviando email: " . $sendException->getMessage()
                 ], 500);
             }
-        } catch (ValidationException $v) {
+        } catch (ValidationException $validationException) {
+            // Log validation errors
+            Log::warning('Email Send Validation Failed', [
+                'errors' => $validationException->errors()
+            ]);
+
             return response()->json([
                 'error' => 'Error de validación',
-                'details' => $v->errors()
+                'details' => $validationException->errors()
             ], 422);
         } catch (\Exception $e) {
+            // Log unexpected errors
+            Log::error('Unexpected Email Send Error', [
+                'error' => $e->getMessage()
+            ]);
+
             return response()->json([
                 'error' => "Error inesperado: " . $e->getMessage()
             ], 500);

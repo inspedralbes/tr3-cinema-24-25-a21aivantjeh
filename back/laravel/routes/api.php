@@ -27,3 +27,7 @@ Route::get('/showtimes', [ShowtimeController::class, 'index']);
 Route::get('/entradas/{email}', [EntradasController::class, 'getEntradas']);
 
 Route::get('/showtimes/{showtimeId}/occupied-seats', [ShowtimeSeatsController::class, 'getOccupiedSeats']);
+
+Route::get('/ticket-view', function () {
+    return view('ticket');
+});
