@@ -12,6 +12,11 @@ class Entradas extends Model
         'showtime_id',
         'fila',
         'columna',
-        'ticket_id',
+        // 'ticket_id',
     ];
+
+    public function showtime()
+    {
+        return $this->belongsTo(Showtime::class);
+    }
 }

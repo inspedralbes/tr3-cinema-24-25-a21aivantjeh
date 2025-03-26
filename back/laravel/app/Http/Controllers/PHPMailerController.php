@@ -7,6 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class PHPMailerController extends Controller
@@ -94,28 +95,6 @@ class PHPMailerController extends Controller
                 'movie' => 'required|array',
             ]);
 
-            $tempDir = storage_path('app/public/temp/' . uniqid());
-            if (!file_exists($tempDir)) {
-                mkdir($tempDir, 0755, true);
-            }
-
-            $posterUrl = $validatedData['movie']['poster'] ?? null;
-            $localPosterPath = null;
-
-            if ($posterUrl) {
-                $extension = pathinfo(parse_url($posterUrl, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
-                $localPosterPath = $tempDir . '/poster.' . $extension;
-                
-                // Download the image
-                $imageContent = file_get_contents($posterUrl);
-                if ($imageContent !== false) {
-                    file_put_contents($localPosterPath, $imageContent);
-                    
-                    // Update the movie data with the local path
-                    $validatedData['movie']['local_poster'] = asset('storage/temp/' . basename($tempDir) . '/poster.' . $extension);
-                }
-            }
-
             $mail = new PHPMailer(true);
 
             $mail->isSMTP();
@@ -136,15 +115,12 @@ class PHPMailerController extends Controller
             ];
 
             $mail->setFrom('a21aivantjeh@inspedralbes.cat', 'TaquillaXpress');
-            $mail->addAddress('a21aivantjeh@inspedralbes.cat'); // Puede ser tu dirección de control
+            $mail->addAddress('a21aivantjeh@inspedralbes.cat');
 
             foreach ($validatedData['to'] as $recipient) {
                 $mail->addBCC($recipient);
             }
 
-            Log::info('Datos de la película:', $validatedData['movie']);
-
-            // Renderizar la vista del correo
             $htmlContent = View::make('ticket', [
                 'subject' => $validatedData['subject'],
                 'message' => $validatedData['message'],
@@ -160,15 +136,16 @@ class PHPMailerController extends Controller
                 'user' => $validatedData['user'] ?? null,
                 'movieData' => $validatedData['movie'],
                 'ticketDetails' => $validatedData['movie']['asientos'],
-                'usePosterLocal' => true,
             ])->render();
 
             // Generar el PDF del ticket
-            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($pdfContent);
+            $pdf = Pdf::loadHTML($pdfContent);
             $pdfContentView = $pdf->output();
 
             // Adjuntar el PDF al correo
-            $mail->addStringAttachment($pdfContentView, 'ticket.pdf', 'base64', 'application/pdf');
+            $movieTitle = preg_replace('/[^A-Za-z0-9\-]/', '_', $validatedData['movie']['title']); // Limpiar el título
+            $pdfFileName = "{$movieTitle}_ticket.pdf";
+            $mail->addStringAttachment($pdfContentView, $pdfFileName, 'base64', 'application/pdf');
 
             // Enviar el correo
             $mail->isHTML(true);
@@ -176,11 +153,6 @@ class PHPMailerController extends Controller
             $mail->Body = $htmlContent;
 
             $mail->send();
-
-            if (file_exists($tempDir)) {
-                array_map('unlink', glob("$tempDir/*.*"));
-                rmdir($tempDir);
-            }
 
             return response()->json([
                 'message' => 'Email con ticket enviado exitosamente'

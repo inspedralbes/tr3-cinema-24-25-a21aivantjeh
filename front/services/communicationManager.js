@@ -85,10 +85,10 @@ export async function registerUser(userData) {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();  
-            throw new Error(errorData?.message || "Error al registrar el usuario"); 
+            const errorData = await response.json();
+            throw new Error(errorData?.message || "Error al registrar el usuario");
         }
-        
+
         const data = await response.json();
         authStore.login(data.user, data.user.token);
         alert("Usuario registrado correctamente");
@@ -104,7 +104,7 @@ export async function loginUser(userData) {
     const URL = `${HOST}/login`;
 
     try {
-        const response = await fetch (URL, {
+        const response = await fetch(URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -113,9 +113,9 @@ export async function loginUser(userData) {
             body: JSON.stringify(userData),
         });
 
-        if(!response.ok) {
+        if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData?.message || "Error al hacer el login del usuario"); 
+            throw new Error(errorData?.message || "Error al hacer el login del usuario");
         }
 
         const data = await response.json();
@@ -127,8 +127,8 @@ export async function loginUser(userData) {
     }
 }
 
-export async function comprarTicketNoAcc(ticketDetails) {
-    const URL = `${HOST}/buy-tickets-noacc`;
+export async function comprarTicket(ticketDetails) {
+    const URL = `${HOST}/buy-tickets`;
     console.log("Ticket details:", ticketDetails);
 
     try {
@@ -138,18 +138,66 @@ export async function comprarTicketNoAcc(ticketDetails) {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
+            // mode: "no-cors",
+            // credentials: 'include',
             body: JSON.stringify(ticketDetails),
         });
 
         if (!response.ok) {
-            const errorData = await response.json();  
-            throw new Error(errorData?.message || "Error al comprar el ticket"); 
+            // const errorData = await response.json();
+            // throw new Error(errorData?.message || "Error al comprar el ticket");
+            const errorData = await response.json().catch(() => null);
+            console.error("Error en la compra:", errorData);
+            throw new Error(errorData?.message || "Error al comprar el ticket");
         }
-        
+
         const data = await response.json();
         return data;
 
     } catch (error) {
         throw error;
     }
+}
+
+export async function getEntradas(email) {
+    const URL = `${HOST}/entradas/${email}`;
+
+    try {
+        const response = await fetch(URL, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData?.message || "Error al obtener las entradas");
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getShowtimeSeats(showtimeId) {
+    const URL = `${HOST}/showtimes/${showtimeId}/occupied-seats`;
+
+    const response = await fetch(URL, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
 }

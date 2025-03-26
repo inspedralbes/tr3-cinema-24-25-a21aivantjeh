@@ -6,14 +6,12 @@
             <h1 class="text-3xl font-bold text-[#F46036]">Actualizar Película</h1>
         </div>
 
-        <!-- Mensaje de error general -->
         @if (session('error'))
             <div class="bg-red-500 text-white p-3 rounded-lg mb-4">
                 {{ session('error') }}
             </div>
         @endif
 
-        <!-- Mensaje de éxito -->
         @if (session('success'))
             <div class="bg-green-500 text-white p-3 rounded-lg mb-4">
                 {{ session('success') }}
@@ -21,8 +19,9 @@
         @endif
 
         <div class="bg-white shadow-lg rounded-lg p-6">
-            <form action="{{ route('dashboard.peliculas.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('dashboard.peliculas.update', ['id' => $movie->id]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <div class="mb-4">
                     <label for="title" class="block text-sm font-semibold text-gray-700">Título</label>
                     <input type="text" id="title" name="title"

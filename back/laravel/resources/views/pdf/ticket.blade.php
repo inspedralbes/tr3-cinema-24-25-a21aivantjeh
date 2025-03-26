@@ -227,13 +227,6 @@
                                 <span class="info-label">Clasificación:</span>
                                 <span class="info-value">{{ $movieData['rated'] }}</span>
                             </div>
-
-                            @if (!empty($movieData['local_poster']) && isset($usePosterLocal) && $usePosterLocal)
-                                <img class="movie-image" src="{{ $movieData['local_poster'] }}"
-                                    alt="Imagen de la película">
-                            @elseif (!empty($movieData['poster']))
-                                <img class="movie-image" src="{{ $movieData['poster'] }}" alt="Imagen de la película">
-                            @endif
                         </div>
 
                         <!-- Información de la fecha y hora -->

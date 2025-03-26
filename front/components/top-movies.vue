@@ -1,6 +1,6 @@
 <template>
     <div class="relative w-screen h-96">
-        <Swiper class="w-full h-full shadow-xl overflow-hidden" :slides-per-view="1" :loop="true" :effect="'fade'"
+        <Swiper class="w-full h-full overflow-hidden" :slides-per-view="1" :loop="true" :effect="'fade'"
             :fade="{ crossFade: true }" :autoplay="{ delay: 5000, disableOnInteraction: false }"
             :breakpoints="{
             '640': { slidesPerView: 1 },
@@ -9,7 +9,7 @@
             }">
             <SwiperSlide v-for="movie in movies" :key="movie.movie.id" class="relative" @click="comprarEntradas(movie)">
                 <div class="h-full w-full bg-cover bg-center" :style="{ backgroundImage: `url(${movie.movie.poster})` }">
-                    <div class="absolute inset-[-1px] bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                    <div class="absolute inset-[-1px] bg-gradient-to-t from-[#2B4162] via-black/40 to-transparent"></div>
                 </div>
 
                 <div class="absolute bottom-0 left-0 w-full p-6 z-20">

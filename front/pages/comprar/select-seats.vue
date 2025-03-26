@@ -1,4 +1,10 @@
 <template>
+    <div v-if="isLoading" class="text-center">
+        Cargando asientos...
+    </div>
+    <div v-else-if="errorFetching" class="text-red-500 text-center">
+        Error al cargar los asientos: {{ errorFetching }}
+    </div>
     <div class="min-h-screen bg-gray-900 text-white p-4 md:p-6">
         <div class="bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 mb-6 flex items-center justify-between">
             <div class="flex items-center gap-4 w-full">
@@ -41,6 +47,19 @@
                     class="absolute -top-4 left-1/2 transform -translate-x-1/2 w-1/2 h-12 bg-blue-500/10 blur-xl rounded-full">
                 </div>
             </div>
+            <!-- <div class="max-w-3xl mx-auto mt-6 mb-8">
+                <div
+                    class="grid grid-cols-10 gap-2 p-5 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700">
+                    <button v-for="asiento in asientos" :key="asiento.id" :class="[
+                        'size-7 rounded-md flex items-center justify-center transition-all text-sm',
+                        asiento.reservado ? 'seat-reserved cursor-not-allowed opacity-70' :
+                            asientosSeleccionados.includes(asiento) ? 'seat-selected ring-2' : 'seat-available hover:ring-2'
+                    ]" :disabled="asiento.reservado" @click="toggleAsiento(asiento)">
+                        {{ asiento.columna }}
+                    </button>
+                </div>
+            </div> -->
+
             <div class="max-w-3xl mx-auto mt-6 mb-8">
                 <div
                     class="grid grid-cols-10 gap-2 p-5 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700">
@@ -124,6 +143,7 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '~/store/authStore';
+import { getShowtimeSeats } from '../../services/communicationManager';
 
 const route = useRoute();
 const router = useRouter();
@@ -135,21 +155,71 @@ const columnas = 10;
 const maxSeats = 10;
 
 const asientos = ref([]);
-
-for (let fila = 1; fila <= filas; fila++) {
-    for (let columna = 1; columna <= columnas; columna++) {
-        asientos.value.push({
-            id: (fila - 1) * 10 + columna,
-            fila: fila,
-            columna: columna,
-            reservado: Math.random() > 0.7
-        });
-    }
-}
-
 const asientosSeleccionados = ref([]);
+const isLoading = ref(true);
+const errorFetching = ref(null);
+
+onMounted(async () => {
+    try {
+        isLoading.value = true;
+
+        const response = await getShowtimeSeats(movieData.dia.id);
+
+        const occupiedSeats = response.occupied_seats;
+        console.log('occupiedSeats:', occupiedSeats);
+
+        // Generate seats with simplified mapping
+        const seatsArray = [];
+        for (let fila = 1; fila <= filas; fila++) {
+            for (let columna = 1; columna <= columnas; columna++) {
+                seatsArray.push({
+                    id: (fila - 1) * 10 + columna,
+                    fila: fila,
+                    columna: columna,
+                    reservado: occupiedSeats.some(
+                        seat => seat.fila === fila && seat.columna === columna
+                    )
+                });
+            }
+        }
+
+        asientos.value = seatsArray;
+    } catch (error) {
+        console.error('Error fetching occupied seats:', error);
+        errorFetching.value = error.message;
+    } finally {
+        isLoading.value = false;
+    }
+});
+
+// for (let fila = 1; fila <= filas; fila++) {
+//     for (let columna = 1; columna <= columnas; columna++) {
+//         asientos.value.push({
+//             id: (fila - 1) * 10 + columna,
+//             fila: fila,
+//             columna: columna,
+//             reservado: Math.random() > 0.7
+//         });
+//     }
+// }
+
+
+// const toggleAsiento = (asiento) => {
+//     const index = asientosSeleccionados.value.findIndex(a => a.id === asiento.id);
+//     if (index !== -1) {
+//         asientosSeleccionados.value.splice(index, 1);
+//     } else {
+//         if (asientosSeleccionados.value.length < maxSeats) {
+//             asientosSeleccionados.value.push(asiento);
+//         } else {
+//             alert("No puedes seleccionar más de 10 asientos");
+//         }
+//     }
+// };
 
 const toggleAsiento = (asiento) => {
+    if (asiento.reservado) return;
+
     const index = asientosSeleccionados.value.findIndex(a => a.id === asiento.id);
     if (index !== -1) {
         asientosSeleccionados.value.splice(index, 1);
@@ -169,35 +239,71 @@ const removeAsiento = (asiento) => {
     }
 };
 
+// const confirmarAsientos = () => {
+//     const authStore = useAuthStore();
+//     const usuarioAutenticado = authStore?.user;
+//     // const usuarioAutenticado = authStore?.user || JSON.parse(localStorage.getItem("user"));
+
+//     const asientosFiltrados = asientosSeleccionados.value.map(({ reservado, ...asiento }) => asiento);
+
+//     const movieDataWithSeats = {
+//         ...movieData,
+//         asientos: asientosFiltrados
+//     };
+
+//     const encodedData = encodeURIComponent(JSON.stringify(movieDataWithSeats));
+//     // console.log("MovieData:", movieDataWithSeats);
+
+//     if (!usuarioAutenticado) {
+//         navigateTo({
+//             path: "/comprar/tickets-noacc",
+//             query: {
+//                 data: encodedData
+//             }
+//         });
+//     } else {
+//         navigateTo({
+//             path: "/comprar/tickets",
+//             query: {
+//                 data: encodedData
+//             }
+//         });
+//     }
+// };
+
 const confirmarAsientos = () => {
     const authStore = useAuthStore();
-    const usuarioAutenticado = authStore?.user || JSON.parse(localStorage.getItem("user"));
-    const asientosFiltrados = asientosSeleccionados.value.map(({ reservado, ...asiento }) => asiento);
+    // const usuarioAutenticado = authStore?.user;
 
     const movieDataWithSeats = {
         ...movieData,
-        asientos: asientosFiltrados
+        asientos: asientosSeleccionados.value.map(({ reservado, ...asiento }) => asiento)
     };
 
     const encodedData = encodeURIComponent(JSON.stringify(movieDataWithSeats));
-    // console.log("MovieData:", movieDataWithSeats);
 
-    if (!usuarioAutenticado) {
-        // Navega a una pagina sin necesidad de autenticacion
-        navigateTo({
-            path: "/comprar/tickets-noacc",
-            query: {
-                data: encodedData
-            }
-        });
-    } else {
-        navigateTo({
-            path: "/comprar/tickets",
-            query: {
-                data: encodedData
-            }
-        });
-    }
+    navigateTo({
+        path: "/comprar/tickets",
+        query: {
+            data: encodedData
+        }
+    });
+
+    // if (!usuarioAutenticado) {
+    //     navigateTo({
+    //         path: "/comprar/tickets-noacc",
+    //         query: {
+    //             data: encodedData
+    //         }
+    //     });
+    // } else {
+    //     navigateTo({
+    //         path: "/comprar/tickets",
+    //         query: {
+    //             data: encodedData
+    //         }
+    //     });
+    // }
 };
 
 const confirmarCancelacion = () => {

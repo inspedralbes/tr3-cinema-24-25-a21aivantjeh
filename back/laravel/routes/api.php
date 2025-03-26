@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\EntradasController;
 use App\Http\Controllers\ShowtimeController;
+use App\Http\Controllers\ShowtimeSeatsController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -18,6 +19,11 @@ Route::get('/coming-soon', [MovieController::class, 'upcomingMovies']);
 Route::post('/register', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
 
-Route::post('/buy-tickets-noacc', [EntradasController::class, 'storeNoAcc']);
+Route::post('/buy-tickets', [EntradasController::class, 'storeEntrada']);
+// Route::post('/buy-tickets-noacc', [EntradasController::class, 'proba']);
 
 Route::get('/showtimes', [ShowtimeController::class, 'index']);
+
+Route::get('/entradas/{email}', [EntradasController::class, 'getEntradas']);
+
+Route::get('/showtimes/{showtimeId}/occupied-seats', [ShowtimeSeatsController::class, 'getOccupiedSeats']);

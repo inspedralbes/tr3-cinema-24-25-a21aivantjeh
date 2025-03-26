@@ -54,7 +54,7 @@ Route::middleware(['auth:admin'])->group(function () {
     // Rutas para el panel de administración de peliculas
     Route::get('/dashboard/peliculas', [MovieController::class, 'indexAdmin'])->name('dashboard.peliculas');
     Route::delete('/dashboard/pelicula/{id}', [MovieController::class, 'destroyAdmin']);
-    Route::put('/dashboard/peliculas/{id}', [MovieController::class, 'updateAdmin']);
+    Route::put('/dashboard/peliculas/{id}', [MovieController::class, 'updateAdmin'])->name('dashboard.peliculas.update');
     Route::get('/dashboard/peliculas/crear', function () {
         return view('admin.dashboard.crearPelicula');
     })->name('dashboard.crearPelicula');

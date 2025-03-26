@@ -23,7 +23,7 @@ class Movie extends Model
         'language',
         'release_date',
         'poster',
-        'video',
+        'trailer',
         'country',
 
     ];

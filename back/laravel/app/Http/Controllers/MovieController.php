@@ -97,14 +97,12 @@ class MovieController extends Controller
                 'country' => 'nullable|string',
             ]);
 
-            // Subir la imagen del poster si se envía
             if ($request->hasFile('poster')) {
                 $posterPath = $request->file('poster')->store('posters', 'public');
             } else {
-                $posterPath = null; // Si no hay imagen, guardamos null
+                $posterPath = null;
             }
 
-            // Guardar en la base de datos
             Movie::create([
                 'title' => $validatedData['title'],
                 'description' => $validatedData['description'],
@@ -139,5 +137,35 @@ class MovieController extends Controller
         $movie->delete();
 
         return response()->json(['success' => 'Pelicula eliminada correctamente.']);
+    }
+
+    public function updateAdmin(Request $request, string $id)
+    {
+        $movie = Movie::find($id);
+        if (!$movie) {
+            return response()->json(['error' => 'Pelicula no encontrada'], 404);
+        }
+
+        $updateData = [
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'genre' => $request->input('genre'),
+            'year' => $request->input('year'),
+            'rating' => $request->input('rating'),
+            'duration' => $request->input('duration'),
+            'director' => $request->input('director'),
+            'writer' => $request->input('writer'),
+            'cast' => $request->input('cast'),
+            'rated' => $request->input('rated'),
+            'language' => $request->input('language'),
+            'release_date' => $request->input('release_date'),
+            'poster' => $request->input('poster'),
+            'trailer' => $request->input('trailer'),
+            'country' => $request->input('country'),
+        ];
+
+        $movie->update($updateData);
+
+        return redirect()->route('dashboard.peliculas')->with('success', 'Película creada con éxito');
     }
 }
