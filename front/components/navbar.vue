@@ -1,29 +1,21 @@
 <template>
-    <nav class="w-full bg-black text-white p-4 py-5 shadow-t transition-all ease-in-out duration-300 fixed bottom-0 ">
-        <ul class="flex justify-around items-center space-x-6">
-            <li>
-                <!-- <a href="/app"> -->
+    <nav class="w-full bg-black text-white p-2 py-3 shadow-t transition-all ease-in-out duration-300 fixed bottom-0 ">
+        <ul class="flex justify-around items-center">
+            <li> 
                 <NuxtLink to="/">
                     <img src="../assets/images/inicio.svg" alt="Inici"
                         class="size-5 hover:scale-110 transition-transform duration-300" />
-                    <!-- </a> -->
                 </NuxtLink>
             </li>
             <li>
-                <!-- <a href="/Favorites"> -->
-                <NuxtLink to="/favorites">
-                    <img src="../assets/images/corazon.svg" alt="Preferides"
-                        class="size-5 hover:scale-110 transition-transform duration-300" />
-                </NuxtLink>
-                <!-- </a> -->
+                <img src="../assets/images/logoInstituto.png" alt="Preferides"
+                    class="size-8 bg-white rounded-full p-1" />
             </li>
             <li>
-                <!-- <a href="/Perfil"> -->
                 <NuxtLink :to="profileRoute">
                     <img src="../assets/images/perfil.svg" alt="Perfil"
                         class="size-5 hover:scale-110 transition-transform duration-300" />
                 </NuxtLink>
-                <!-- </a> -->
             </li>
         </ul>
     </nav>

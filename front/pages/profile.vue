@@ -52,30 +52,6 @@
                         </ul>
                     </div>
                 </div>
-
-                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">Películas Favoritas</h3>
-                        <p class="mt-1 text-sm text-gray-500">Mi colección personal</p>
-                    </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 p-4">
-                        <div v-for="(movie, index) in favoriteMovies" :key="index" class="group">
-                            <div class="aspect-w-2 aspect-h-3 rounded-lg overflow-hidden bg-gray-100">
-                                <div class="bg-gray-300 h-32 flex items-center justify-center">
-                                    <span class="text-2xl">🎬</span>
-                                </div>
-                                <div class="p-2">
-                                    <p class="text-sm font-medium text-gray-900 truncate">{{ movie.title }}</p>
-                                    <p class="text-xs text-gray-500">{{ movie.year }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                        <button class="text-sm font-medium text-blue-600 hover:text-blue-800">Editar colección
-                            →</button>
-                    </div>
-                </div>
             </div>
         </main>
     </div>
@@ -98,16 +74,6 @@ onMounted(async () => {
     }
     console.log("Mis entradas", misEntradas.value);
 });
-
-// Datos de ejemplo para películas favoritas
-const favoriteMovies = ref([
-    { title: "Interestelar", year: "2014" },
-    { title: "El Padrino", year: "1972" },
-    { title: "Pulp Fiction", year: "1994" },
-    { title: "Ciudad de Dios", year: "2002" },
-    { title: "Matrix", year: "1999" },
-    { title: "El club de la lucha", year: "1999" }
-]);
 
 const logout = () => {
     authStore.logout();

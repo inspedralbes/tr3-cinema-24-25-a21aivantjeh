@@ -138,14 +138,10 @@ export async function comprarTicket(ticketDetails) {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            // mode: "no-cors",
-            // credentials: 'include',
             body: JSON.stringify(ticketDetails),
         });
 
         if (!response.ok) {
-            // const errorData = await response.json();
-            // throw new Error(errorData?.message || "Error al comprar el ticket");
             const errorData = await response.json().catch(() => null);
             console.error("Error en la compra:", errorData);
             throw new Error(errorData?.message || "Error al comprar el ticket");

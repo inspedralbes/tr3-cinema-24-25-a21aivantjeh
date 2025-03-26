@@ -45,30 +45,24 @@ class PHPMailerController extends Controller
                 ]
             ];
 
-            // Remitente
             $mail->setFrom('a21aivantjeh@inspedralbes.cat', 'TaquillaXpress');
 
-            // Agregar el destinatario principal (puede dejarse vacío si no hay principal)
-            $mail->addAddress('a21aivantjeh@inspedralbes.cat'); // Puede ser tu dirección de control
+            $mail->addAddress('a21aivantjeh@inspedralbes.cat');
 
-            // Agregar cada destinatario como BCC (copia oculta)
             foreach ($validatedData['to'] as $recipient) {
                 $mail->addBCC($recipient);
             }
 
-            // Renderizar la vista del correo con los datos del usuario
             $htmlContent = View::make('email', [
                 'subject' => $validatedData['subject'],
                 'message' => $validatedData['message'],
-                'user' => $validatedData['user'] ?? null, // Pasar los datos del usuario
+                'user' => $validatedData['user'] ?? null,
             ])->render();
 
-            // Contenido del correo
             $mail->isHTML(true);
             $mail->Subject = $validatedData['subject'];
             $mail->Body = $htmlContent;
 
-            // Enviar el correo
             $mail->send();
 
             return response()->json([
@@ -87,11 +81,8 @@ class PHPMailerController extends Controller
             $validatedData = $request->validate([
                 'subject' => 'required|string',
                 'message' => 'required|string',
-                'to' => 'required|array',
-                'to.*' => 'required|email',
+                'to' => 'required|email', // Changed from array to single email
                 'user' => 'nullable|array',
-                'user.name' => 'nullable|string',
-                'user.surname' => 'nullable|string',
                 'movie' => 'required|array',
             ]);
 
@@ -99,27 +90,15 @@ class PHPMailerController extends Controller
 
             $mail->isSMTP();
             $mail->CharSet = 'UTF-8';
-            $mail->Host = env("MAIL_HOST");
+            $mail->Host = env('MAIL_HOST');
             $mail->SMTPAuth = true;
-            $mail->Username = env("MAIL_USERNAME");
-            $mail->Password = env("MAIL_PASSWORD");
+            $mail->Username = env('MAIL_USERNAME');
+            $mail->Password = env('MAIL_PASSWORD');
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->SMTPOptions = [
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                ]
-            ];
-
             $mail->setFrom('a21aivantjeh@inspedralbes.cat', 'TaquillaXpress');
-            $mail->addAddress('a21aivantjeh@inspedralbes.cat');
-
-            foreach ($validatedData['to'] as $recipient) {
-                $mail->addBCC($recipient);
-            }
+            $mail->addAddress($validatedData['to']); // Single recipient
 
             $htmlContent = View::make('ticket', [
                 'subject' => $validatedData['subject'],
@@ -138,16 +117,13 @@ class PHPMailerController extends Controller
                 'ticketDetails' => $validatedData['movie']['asientos'],
             ])->render();
 
-            // Generar el PDF del ticket
             $pdf = Pdf::loadHTML($pdfContent);
             $pdfContentView = $pdf->output();
 
-            // Adjuntar el PDF al correo
-            $movieTitle = preg_replace('/[^A-Za-z0-9\-]/', '_', $validatedData['movie']['title']); // Limpiar el título
+            $movieTitle = preg_replace('/[^A-Za-z0-9\-]/', '_', $validatedData['movie']['title']);
             $pdfFileName = "{$movieTitle}_ticket.pdf";
             $mail->addStringAttachment($pdfContentView, $pdfFileName, 'base64', 'application/pdf');
 
-            // Enviar el correo
             $mail->isHTML(true);
             $mail->Subject = $validatedData['subject'];
             $mail->Body = $htmlContent;
@@ -159,7 +135,7 @@ class PHPMailerController extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => "Error enviando email: {$mail->ErrorInfo}"
+                'error' => "Error enviando email: " . $e->getMessage()
             ], 500);
         }
     }

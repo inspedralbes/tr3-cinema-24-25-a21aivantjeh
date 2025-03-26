@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="min-h-screen flex justify-center items-center p-4">
         <div
             class="max-w-md w-full bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-md rounded-xl border border-gray-700 shadow-2xl overflow-hidden">
@@ -190,4 +190,5 @@ async function ticketForm() {
         console.error('Error al comprar ticket:', error);
     }
 }
-</script>
+</script> -->
+<template></template>

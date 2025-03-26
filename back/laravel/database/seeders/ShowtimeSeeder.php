@@ -24,8 +24,6 @@ class ShowtimeSeeder extends Seeder
                     'movie_id' => $showtime['movie_id'],
                     'show_date' => $showtime['show_date'],
                     'show_time' => $showtime['show_time'],
-                    'price' => $showtime['price'],
-                    'is_special_day' => $showtime['is_special_day'],
                 ]);
             }
         } catch (QueryException $e) {

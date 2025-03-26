@@ -69,16 +69,19 @@ class EntradasController extends Controller
     public function storeEntrada(Request $request)
     {
         try {
-            $validatedData = $request->validate([
-                'email' => 'email',
-                'movieData' => 'array',
+            // Validate input
+            $data = $request->validate([
+                'email' => 'required|email',
+                'movieData' => 'required|array',
+                'movieData.dia.id' => 'required|integer',
+                'movieData.asientos' => 'required|array',
+                'movieData.title' => 'required|string'
             ]);
 
-            $showtimeId = $validatedData['movieData']['dia']['id'];
-            $asientos = $validatedData['movieData']['asientos'];
-            $movieTitle = $validatedData['movieData']['title'];
-            $movie = $validatedData['movieData'];
+            $showtimeId = $data['movieData']['dia']['id'];
+            $asientos = $data['movieData']['asientos'];
 
+            // Check for occupied seats
             $ocupados = Entradas::where('showtime_id', $showtimeId)
                 ->where(function ($query) use ($asientos) {
                     foreach ($asientos as $asiento) {
@@ -89,45 +92,34 @@ class EntradasController extends Controller
                     }
                 })->get(['fila', 'columna']);
 
+            // If seats are occupied, return error
             if ($ocupados->isNotEmpty()) {
-                $ocupadosDetails = $ocupados->map(function ($asiento) {
-                    return 'Fila: ' . $asiento->fila . ' - Columna: ' . $asiento->columna;
-                });
-
                 return response()->json([
                     'error' => 'Algunos asientos ya están ocupados.',
-                    'asientos_ocupados' => $ocupadosDetails
+                    'asientos_ocupados' => $ocupados->map(fn($a) => "Fila: {$a->fila} - Columna: {$a->columna}")
                 ], 409);
             }
 
+            // Book seats
             foreach ($asientos as $asiento) {
                 Entradas::create([
-                    'user_id' => null,
-                    'user_email' => $validatedData['email'],
+                    'user_email' => $data['email'],
                     'showtime_id' => $showtimeId,
                     'fila' => $asiento['fila'],
                     'columna' => $asiento['columna'],
+                    'vip' => $asiento['vip'],
+                    'precio' => $asiento['vip'] ? 8 : 6
                 ]);
             }
 
-            $subject = $movieTitle . " - Entradas Compradas";
-            $message = "Hola, tu compra ha sido realizada con éxito.";
-            $to = $validatedData['email'];
-
+            // Send confirmation email
             $sendMailController = new PHPMailerController();
-            $emailSent = $sendMailController->sendEntrada(new Request([
-                'subject' => $subject,
-                'message' => $message,
-                'movie' => $movie,
-                'to' => [$to],
+            $sendMailController->sendEntrada(new Request([
+                'subject' => "{$data['movieData']['title']} - Entradas Compradas",
+                'message' => 'Hola, tu compra ha sido realizada con éxito.',
+                'movie' => $data['movieData'],
+                'to' => $data['email'],
             ]));
-
-            if (!$emailSent) {
-                return response()->json([
-                    'status' => 'warning',
-                    'message' => 'Tickets comprados pero hubo un problema al enviar el email'
-                ], 201);
-            }
 
             return response()->json([
                 'status' => 'success',
@@ -139,9 +131,11 @@ class EntradasController extends Controller
                 'detalles' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
+            // \Log::error('Ticket purchase error: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Error interno del servidor',
-                'mensaje' => 'Inténtalo más tarde'
+                'mensaje' => 'Inténtalo más tarde',
+                'detalles' => $e->getMessage()
             ], 500);
         }
     }

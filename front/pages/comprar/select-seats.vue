@@ -92,11 +92,15 @@
                 <div class="flex justify-between items-center border-t border-gray-700 pt-4">
                     <div>
                         <p class="text-gray-300">Precio por asiento</p>
-                        <p class="text-lg font-bold">€9,00</p>
+                        <div>
+                            <p class="text-md font-bold">Asiento normal: 6€</p>
+                            <p class="text-md font-bold">Asiento vip: 8€</p>
+
+                        </div>
                     </div>
                     <div class="text-right">
                         <p class="text-gray-300">Total</p>
-                        <p class="text-lg font-bold">${{ (asientosSeleccionados.length * 9).toFixed(2) }} EUR</p>
+                        <p class="text-lg font-bold">€{{ calcularTotal() }}</p>
                     </div>
                 </div>
             </div>
@@ -212,7 +216,6 @@ const removeAsiento = (asiento) => {
 };
 
 const confirmarAsientos = () => {
-    const authStore = useAuthStore();
 
     const movieDataWithSeats = {
         ...movieData,
@@ -220,6 +223,7 @@ const confirmarAsientos = () => {
     };
 
     const encodedData = encodeURIComponent(JSON.stringify(movieDataWithSeats));
+    console.log('Asientos seleccionados',asientosSeleccionados.value)
 
     navigateTo({
         path: "/comprar/tickets",
@@ -227,22 +231,6 @@ const confirmarAsientos = () => {
             data: encodedData
         }
     });
-
-    // if (!usuarioAutenticado) {
-    //     navigateTo({
-    //         path: "/comprar/tickets-noacc",
-    //         query: {
-    //             data: encodedData
-    //         }
-    //     });
-    // } else {
-    //     navigateTo({
-    //         path: "/comprar/tickets",
-    //         query: {
-    //             data: encodedData
-    //         }
-    //     });
-    // }
 };
 
 const confirmarCancelacion = () => {
@@ -251,4 +239,6 @@ const confirmarCancelacion = () => {
         router.push('/');
     }
 };
+
+const calcularTotal = () => asientosSeleccionados.value.reduce((total, asiento) => total + (asiento.vip ? 8 : 6), 0);
 </script>

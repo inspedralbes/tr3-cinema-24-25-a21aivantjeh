@@ -1,6 +1,7 @@
 <template>
-  <div class="flex justify-between items-center bg-gray-700/50 border-b border-gray-700 w-full p-1">
-    <img src="../../assets/images/logoInstituto.png" alt="TaquillaXpress" class="size-10 p-1 bg-white rounded-full" />
+  <div class="flex justify-between items-center bg-gray-800/50 border-b border-gray-700 w-full p-1">
+    <img src="../../assets/images/cine.svg" alt="Logo Institut Pedralbes"
+      class="size-10 p-1 bg-white rounded-lg border-2 border-black" />
     <p class="text-xl font-bold text-white">TaquillaXpress</p>
   </div>
   <div class="min-h-screen bg-gray-900 text-white p-6 relative">
@@ -77,8 +78,8 @@
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-6">
-            <button v-for="hora in selectedDay?.showtimes || []" :key="hora.id" @click="seleccionarHora(hora)" class="relative"
-              :class="selectedTime && selectedTime.id === hora.id ? 'ring-2 ring-blue-400' : ''">
+            <button v-for="hora in selectedDay?.showtimes || []" :key="hora.id" @click="seleccionarHora(hora)"
+              class="relative" :class="selectedTime && selectedTime.id === hora.id ? 'ring-2 ring-blue-400' : ''">
               <div class="bg-gray-700 px-4 py-4 rounded-xl flex flex-col items-center transition-all duration-200"
                 :class="selectedTime && selectedTime.id === hora.id ? 'bg-blue-600' : 'hover:bg-gray-600'">
                 <span class="text-lg font-bold">{{ hora.time }}</span>
@@ -129,34 +130,34 @@ today.setHours(0, 0, 0, 0);
 
 const availableShowtimes = computed(() => {
   const showtimesArray = Object.values(showtimesObj.value || {});
-  
+
   return showtimesArray.filter(showtime => {
     if (!showtime || !showtime.date) return false;
-    
+
     try {
       const showtimeDate = new Date(showtime.date);
       showtimeDate.setHours(0, 0, 0, 0);
-      
+
       return showtimeDate >= today;
     } catch (e) {
       console.error('Error parsing date:', e);
       return false;
     }
   })
-  .sort((a, b) => new Date(a.date) - new Date(b.date));
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
 });
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
-  
+
   try {
     const dateObj = new Date(dateString);
     dateObj.setHours(0, 0, 0, 0);
-    
+
     if (dateObj.getTime() === today.getTime()) {
       return "Hoy";
     }
-    
+
     return dateString;
   } catch (e) {
     console.error('Error formatting date:', e);

@@ -5,8 +5,7 @@
             <div class="w-full py-2 inline-block bg-gray-800/90 text-white absolute bottom-0">
                 <p class="text-xl font-bold overflow-ellipsis overflow-hidden whitespace-nowrap w-full">{{ movieDetails.title
                     }}</p>
-                <button class="text-xs inline-block bg-amber-500 rounded-full px-2 py-1">Mes
-                    informacións</button>
+                <button class="text-xs inline-block bg-amber-500 rounded-full px-2 py-1">Más información</button>
             </div>
         </div>
     </div>

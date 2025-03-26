@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('entradas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->unsignedBigInteger('user_id')->nullable();
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('user_email');
             $table->unsignedBigInteger('showtime_id');
             $table->foreign('showtime_id')->references('id')->on('showtimes')->onDelete('cascade');
             $table->integer('fila');
             $table->integer('columna');
+            $table->boolean('vip')->default(false);
+            $table->integer('precio')->default(0);
             // $table->string('ticket_id')->nullable();
             $table->timestamps();
         });

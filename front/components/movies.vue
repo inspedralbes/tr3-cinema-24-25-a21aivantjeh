@@ -4,7 +4,7 @@
         <div class="w-full h-32 bg-gray-800 rounded-lg flex items-center justify-center" v-if="movies.length === 0">
             <p class="text-gray-500/50">No hay nada en la cartelera hoy</p>
         </div>
-        <div class="grid grid-cols-2 gap-2 bg-gray-800/90 p-1 rounded-2xl">
+        <div class="grid grid-cols-2 gap-2 bg-gray-800/20 p-1 rounded-2xl">
             <movie-box v-for="movie in movies" :key="movie.id" :movie="movie" />
         </div>
     </div>

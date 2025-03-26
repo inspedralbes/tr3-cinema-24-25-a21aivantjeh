@@ -36,8 +36,10 @@
                     Asientos Seleccionados
                 </h2>
                 <div class="grid grid-cols-2 gap-3 items-center">
-                    <div v-for="asiento in movieData.asientos" :key="asiento.id"
-                        class="bg-gray-900/80 border border-gray-700 rounded-xl p-3 flex justify-center">
+                    <div v-for="asiento in movieData.asientos" :key="asiento.id" :class="[
+                        'border border-gray-700 rounded-xl p-3 flex justify-center',
+                        asiento.vip? 'bg-yellow-500/90 text-black' : 'bg-gray-900/80'
+                    ]">
                         <p class="font-semibold text-xs flex items-center">Fila: {{ asiento.fila }} Col: {{
                             asiento.columna }}</p>
                     </div>
