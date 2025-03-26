@@ -25,18 +25,22 @@
 
         <div class="flex flex-col gap-5">
             <h2 class="text-2xl font-bold text-center">Selecciona tus asientos</h2>
-            <div class="flex justify-center gap-6">
-                <div class="flex items-center gap-2">
+            <div class="grid grid-cols-3 justify-center gap-2">
+                <div class="flex items-center justify-center gap-2">
                     <div class="w-4 h-4 rounded-sm bg-gray-500"></div>
                     <span class="text-sm">Disponible</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center justify-center gap-2">
                     <div class="w-4 h-4 rounded-sm bg-green-400"></div>
                     <span class="text-sm">Seleccionado</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center justify-center gap-2">
                     <div class="w-4 h-4 rounded-sm bg-red-500"></div>
                     <span class="text-sm">Ocupado</span>
+                </div>
+                <div class="col-span-3 flex items-center justify-center gap-2">
+                    <div class="w-4 h-4 rounded-sm bg-[#f4b400]"></div>
+                    <span class="text-sm">VIP</span>
                 </div>
             </div>
 
@@ -47,29 +51,23 @@
                     class="absolute -top-4 left-1/2 transform -translate-x-1/2 w-1/2 h-12 bg-blue-500/10 blur-xl rounded-full">
                 </div>
             </div>
-            <!-- <div class="max-w-3xl mx-auto mt-6 mb-8">
-                <div
-                    class="grid grid-cols-10 gap-2 p-5 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700">
-                    <button v-for="asiento in asientos" :key="asiento.id" :class="[
-                        'size-7 rounded-md flex items-center justify-center transition-all text-sm',
-                        asiento.reservado ? 'seat-reserved cursor-not-allowed opacity-70' :
-                            asientosSeleccionados.includes(asiento) ? 'seat-selected ring-2' : 'seat-available hover:ring-2'
-                    ]" :disabled="asiento.reservado" @click="toggleAsiento(asiento)">
-                        {{ asiento.columna }}
-                    </button>
-                </div>
-            </div> -->
 
             <div class="max-w-3xl mx-auto mt-6 mb-8">
                 <div
-                    class="grid grid-cols-10 gap-2 p-5 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700">
-                    <button v-for="asiento in asientos" :key="asiento.id" :class="[
-                        'size-7 rounded-md flex items-center justify-center transition-all text-sm',
-                        asiento.reservado ? 'seat-reserved cursor-not-allowed opacity-70' :
-                            asientosSeleccionados.includes(asiento) ? 'seat-selected ring-2' : 'seat-available hover:ring-2'
-                    ]" :disabled="asiento.reservado" @click="toggleAsiento(asiento)">
-                        {{ asiento.columna }}
-                    </button>
+                    class="grid grid-cols-11 gap-1 p-3 py-4 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700">
+                    <template v-for="(asiento, index) in asientos" :key="asiento.id">
+                        <div v-if="index % 10 === 0"
+                            class="flex items-center justify-center text-white text-xs font-bold">
+                            {{ fila[Math.floor(index / 10)] }}
+                        </div>
+                        <button :class="[
+                            'size-7 rounded-md flex items-center justify-center transition-all text-sm',
+                            asiento.reservado ? 'seat-reserved cursor-not-allowed opacity-70' :
+                                asientosSeleccionados.includes(asiento) ? 'seat-selected ring-2' : asiento.vip ? 'seat-vip' : 'seat-available hover:ring-2'
+                        ]" :disabled="asiento.reservado" @click="toggleAsiento(asiento)">
+                            {{ asiento.columna }}
+                        </button>
+                    </template>
                 </div>
             </div>
         </div>
@@ -137,6 +135,10 @@
 .seat-selected {
     background-color: #05d472;
 }
+
+.seat-vip {
+    background-color: #f4b400;
+}
 </style>
 
 <script setup>
@@ -147,6 +149,8 @@ import { getShowtimeSeats } from '../../services/communicationManager';
 
 const route = useRoute();
 const router = useRouter();
+
+let fila = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'L', 'M']
 
 const movieData = JSON.parse(decodeURIComponent(route.query.data || '{}'));
 
@@ -159,63 +163,31 @@ const asientosSeleccionados = ref([]);
 const isLoading = ref(true);
 const errorFetching = ref(null);
 
+
 onMounted(async () => {
     try {
-        isLoading.value = true;
-
         const response = await getShowtimeSeats(movieData.dia.id);
-
         const occupiedSeats = response.occupied_seats;
-        console.log('occupiedSeats:', occupiedSeats);
 
-        // Generate seats with simplified mapping
         const seatsArray = [];
         for (let fila = 1; fila <= filas; fila++) {
             for (let columna = 1; columna <= columnas; columna++) {
                 seatsArray.push({
                     id: (fila - 1) * 10 + columna,
-                    fila: fila,
-                    columna: columna,
-                    reservado: occupiedSeats.some(
-                        seat => seat.fila === fila && seat.columna === columna
-                    )
+                    fila,
+                    columna,
+                    reservado: occupiedSeats.some(seat => seat.fila === fila && seat.columna === columna),
+                    vip: fila === 6
                 });
             }
         }
-
         asientos.value = seatsArray;
     } catch (error) {
-        console.error('Error fetching occupied seats:', error);
         errorFetching.value = error.message;
     } finally {
         isLoading.value = false;
     }
 });
-
-// for (let fila = 1; fila <= filas; fila++) {
-//     for (let columna = 1; columna <= columnas; columna++) {
-//         asientos.value.push({
-//             id: (fila - 1) * 10 + columna,
-//             fila: fila,
-//             columna: columna,
-//             reservado: Math.random() > 0.7
-//         });
-//     }
-// }
-
-
-// const toggleAsiento = (asiento) => {
-//     const index = asientosSeleccionados.value.findIndex(a => a.id === asiento.id);
-//     if (index !== -1) {
-//         asientosSeleccionados.value.splice(index, 1);
-//     } else {
-//         if (asientosSeleccionados.value.length < maxSeats) {
-//             asientosSeleccionados.value.push(asiento);
-//         } else {
-//             alert("No puedes seleccionar más de 10 asientos");
-//         }
-//     }
-// };
 
 const toggleAsiento = (asiento) => {
     if (asiento.reservado) return;
@@ -239,41 +211,8 @@ const removeAsiento = (asiento) => {
     }
 };
 
-// const confirmarAsientos = () => {
-//     const authStore = useAuthStore();
-//     const usuarioAutenticado = authStore?.user;
-//     // const usuarioAutenticado = authStore?.user || JSON.parse(localStorage.getItem("user"));
-
-//     const asientosFiltrados = asientosSeleccionados.value.map(({ reservado, ...asiento }) => asiento);
-
-//     const movieDataWithSeats = {
-//         ...movieData,
-//         asientos: asientosFiltrados
-//     };
-
-//     const encodedData = encodeURIComponent(JSON.stringify(movieDataWithSeats));
-//     // console.log("MovieData:", movieDataWithSeats);
-
-//     if (!usuarioAutenticado) {
-//         navigateTo({
-//             path: "/comprar/tickets-noacc",
-//             query: {
-//                 data: encodedData
-//             }
-//         });
-//     } else {
-//         navigateTo({
-//             path: "/comprar/tickets",
-//             query: {
-//                 data: encodedData
-//             }
-//         });
-//     }
-// };
-
 const confirmarAsientos = () => {
     const authStore = useAuthStore();
-    // const usuarioAutenticado = authStore?.user;
 
     const movieDataWithSeats = {
         ...movieData,
