@@ -1,8 +1,8 @@
 @extends('layout.index')
 
 @section('dashboard')
-    <div class="bg-cyan-700 p-2">
-        <div class="flex items-center">
+    <div class="bg-[#101828] p-2 flex flex-col gap-4">
+        <div class="flex items-center border-b-4 border-double border-gray-200 pb-1">
             <h1 class="text-4xl font-bold text-white min-h-20 flex items-end">Dashboard</h1>
         </div>
         <div class="grid grid-cols-2 gap-4 py-2 text-gray-300 font-bold text-2xl">
@@ -31,6 +31,6 @@
                 <p class="text-gray-700">Showtimes</p>
             </a>
         </div>
-        <p class="text-center text-cyan-900 mt-16">Pagina de administracion | TaquillaXpress | 2025</p>
+        <p class="text-center text-gray-700 mt-16">Pagina de administracion | TaquillaXpress | 2025</p>
     </div>
 @endsection

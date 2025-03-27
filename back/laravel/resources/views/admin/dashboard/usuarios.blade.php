@@ -7,7 +7,7 @@
             <a href="{{ route('dashboard.crearUsuario') }}" class="flex items-center gap-1 rounded-full bg-[#3083DC] px-3 py-1 text-white text-sm">Crear usuario<img src="{{ asset('create.svg') }}" alt="" class="size-5"></a>
         </div>
 
-        <div class="bg-white shadow-md rounded-lg overflow-x-scroll">
+        <div class="bg-[white] shadow-md rounded-lg overflow-x-scroll">
             <table class="w-full border-collapse">
                 <thead>
                     <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">

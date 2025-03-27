@@ -17,13 +17,16 @@
 <body>
     <div class="min-h-screen flex flex-col">
         <div class="flex justify-between items-center p-4 shadow-md sticky top-0 bg-white z-10 w-full">
-            <a href="{{ route('dashboard') }}" class="text-xl font-bold">TaquillaXpress</a>
+            <div class="flex items-center gap-2">
+                <img src="{{ asset('cine.svg') }}" alt="" class="size-6">
+                <a href="{{ route('dashboard') }}" class="text-xl font-bold">TaquillaXpress</a>
+            </div>
 
             @auth('admin')
                 <div class="relative flex items-center gap-2" x-data="{ open: false }">
                     <p>Admin</p>
                     <button @click="open = !open" class="focus:outline-none">
-                        <div class="size-8 rounded-full bg-cyan-700 border border-gray-600">
+                        <div class="size-8 rounded-full bg-[#101828] border border-gray-600">
                             <img src="{{ asset('persona.svg') }}" alt="User" class="w-8 h-8">
                         </div>
                     </button>
@@ -31,8 +34,6 @@
                     <div x-show="open" @click.away="open = false"
                         class="absolute top-5 right-0 mt-2 w-48 bg-white shadow-md rounded-md overflow-hidden">
                         <ul class="text-gray-700">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-200">Perfíl</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-200">Configuración</a></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
