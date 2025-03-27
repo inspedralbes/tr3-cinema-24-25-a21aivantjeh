@@ -124,7 +124,6 @@ class EntradasController extends Controller
                 'status' => 'success',
                 'message' => 'Tickets comprados y email enviado con éxito'
             ], 201);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'error' => 'Error de validación',
@@ -148,8 +147,31 @@ class EntradasController extends Controller
         return response()->json($entradas);
     }
 
-    public function proba(Request $request)
+    public function indexAdmin()
     {
-        return response()->json(['message' => 'ruta proba']);
+        $entradas = Entradas::all();
+        return view('admin.dashboard.entradas', compact('entradas'));
+    }
+
+    public function destroyAdmin(string $id)
+    {
+        $entrada = Entradas::find($id);
+        $email = $entrada->user_email;
+        // $entradaData = $email;
+        if (!$entrada) {
+            return response()->json(['error' => 'Entrada no encontrada'], 404);
+        }
+
+        $entrada->delete();
+
+        $sendMailController = new PHPMailerController();
+        $sendMailController->eliminaEntrada(new Request([
+            'subject' => "ENTRADA ELIMINADA!!!",
+            'message' => 'Hola, tu entrada ha sido eliminada.',
+            'to' => $email,
+            // 'entradaData' => $entradaData
+        ]));
+
+        return response()->json(['success' => 'Pelicula eliminada correctamente.']);
     }
 }

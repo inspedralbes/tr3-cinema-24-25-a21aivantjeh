@@ -4,7 +4,9 @@
     <div class="p-5">
         <div class="flex justify-between mb-5">
             <h1 class="text-3xl font-bold text-[#D7263D]">Usuarios</h1>
-            <a href="{{ route('dashboard.crearUsuario') }}" class="flex items-center gap-1 rounded-full bg-[#3083DC] px-3 py-1 text-white text-sm">Crear usuario<img src="{{ asset('create.svg') }}" alt="" class="size-5"></a>
+            <a href="{{ route('dashboard.crearUsuario') }}"
+                class="flex items-center gap-1 rounded-full bg-[#3083DC] px-3 py-1 text-white text-sm">Crear usuario<img
+                    src="{{ asset('create.svg') }}" alt="" class="size-5"></a>
         </div>
 
         <div class="bg-[white] shadow-md rounded-lg overflow-x-scroll">

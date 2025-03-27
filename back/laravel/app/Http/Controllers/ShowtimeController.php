@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Movie;
 use App\Models\Showtime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ShowtimeController extends Controller
 {
@@ -29,7 +31,7 @@ class ShowtimeController extends Controller
 
             if (!isset($groupedShowtimes[$movieId]['showing_dates'][$date])) {
                 $groupedShowtimes[$movieId]['showing_dates'][$date] = [
-                    'id' => $showtime->id,  
+                    'id' => $showtime->id,
                     'date' => $date,
                     'showtimes' => []
                 ];
@@ -97,5 +99,73 @@ class ShowtimeController extends Controller
     public function destroy(Showtime $showtime)
     {
         //
+    }
+
+    public function indexAdmin()
+    {
+        $showtimes = Showtime::all();
+
+        return view('admin.dashboard.showtimes', compact('showtimes'));
+    }
+
+    public function createAdmin()
+    {
+        $showtimes = Showtime::all();
+        $movies = Movie::all();
+
+        return view('admin.dashboard.crearShowtime', compact('showtimes', 'movies'));
+    }
+
+    public function checkAvailability(Request $request)
+    {
+        $date = $request->get('date');
+
+        $reservedTimes = Showtime::where('show_date', $date)->pluck('show_time')->toArray();
+        Log::info('Horarios reservados para la fecha: ' . $date, ['reservados' => $reservedTimes]);
+
+        $possibleTimes = ['16:00', '18:00', '20:00'];
+
+        $availableTimes = array_diff($possibleTimes, $reservedTimes);
+        $availableTimes = array_values($availableTimes);
+
+        Log::info('Horarios disponibles para la fecha: ' . $date, ['disponibles' => $availableTimes]);
+
+        return response()->json(['availableTimes' => $availableTimes]);
+    }
+
+
+    public function storeAdmin(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'movie_id' => 'required|exists:movies,id',
+                'show_date' => 'required',
+                'show_time' => 'required'
+            ]);
+
+            Showtime::create([
+                'movie_id' => $validatedData['movie_id'],
+                'show_date' => $validatedData['show_date'],
+                'show_time' => $validatedData['show_time'],
+            ]);
+            
+            return redirect()->route('dashboard.showtimes')->with('success', 'Showtime creado con éxito');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el showtime: ' . $e->getMessage());
+
+        }
+    }
+
+    public function destroyAdmin (string $id)
+    {
+        $showtime = Showtime::find($id);
+
+        if (!$showtime) {
+            return response()->json(['error' => 'Showtime no encontrado'],404);
+        }
+
+        $showtime->delete();
+
+        return response()->json(['success' => 'Showtime eliminado correctamente']);
     }
 }

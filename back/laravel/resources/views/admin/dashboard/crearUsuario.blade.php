@@ -3,7 +3,7 @@
 @section('dashboard')
     <div class="p-6">
         <div class="flex justify-between mb-6">
-            <h1 class="text-3xl font-bold text-[#F46036]">Crear Usuario</h1>
+            <h1 class="text-3xl font-bold text-[#D7263D]">Crear Usuario</h1>
         </div>
 
         <!-- Mensaje de error general -->
@@ -27,7 +27,7 @@
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-semibold text-gray-700">Nombre</label>
                     <input type="text" id="name" name="name"
-                        class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F46036]"
+                        class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D7263D]"
                         value="{{ old('name') }}" required placeholder="Pepe">
 
                     @error('name')
@@ -38,7 +38,7 @@
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-semibold text-gray-700">Correo Electrónico</label>
                     <input type="email" id="email" name="email"
-                        class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F46036]"
+                        class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D7263D]"
                         value="{{ old('email') }}" required placeholder="ejemplo@ejemplo.com">
 
                     @error('email')
@@ -49,7 +49,7 @@
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-semibold text-gray-700">Contraseña</label>
                     <input type="password" id="password" name="password"
-                        class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F46036]"
+                        class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D7263D]"
                         required placeholder="*****">
 
                     @error('password')

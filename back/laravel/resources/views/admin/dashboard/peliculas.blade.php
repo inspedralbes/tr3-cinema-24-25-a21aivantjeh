@@ -22,7 +22,7 @@
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
                     @foreach ($movies as $movie)
-                        <tr class="border-b border-gray-200 hover:bg-gray-100" id="row-{{ $movie->id }}">
+                        <tr class="border-b border-gray-200 hover:bg-gray-100 whitespace-nowrap" id="row-{{ $movie->id }}">
                             <td class="py-3 px-6 bg-[#F46036]/90 text-white text-center">{{ $movie->id }}</td>
                             <td class="py-3 px-6">
                                 <p>{{ $movie->title }}</p>
@@ -35,7 +35,9 @@
                             </td>
                             <td class="py-3 px-6 text-center flex gap-2">
                                 <a href="{{ route('dashboard.actualizarPelicula', $movie) }}"
-                                    class="flex items-center gap-1 rounded-full bg-[#2A9134] px-3 py-1 text-white text-sm">Editar</a>
+                                class="flex items-center gap-1 rounded-full bg-[#2A9134] px-3 py-1 text-white text-sm">Editar</a>
+                                <a href="{{ route('dashboard.movieDetails', $movie) }}"
+                                    class="flex items-center gap-1 rounded-full bg-[#153131] px-3 py-1 text-white text-sm">Más detalles</a>
                                 <button class="rounded-full bg-[#D7263D] px-3 py-1 text-white"
                                     onclick="deletePelicula('{{ $movie->id }}')">
                                     Eliminar

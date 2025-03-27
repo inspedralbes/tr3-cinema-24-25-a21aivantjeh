@@ -179,4 +179,62 @@ class PHPMailerController extends Controller
             ], 500);
         }
     }
+
+    public function eliminaEntrada(Request $request)
+    {
+        try {
+            Log::info('Entrada delete request data received MailController', $request->all());
+            $validatedData = $request->validate([
+                'subject' => 'required|string',
+                'message' => 'required|string',
+                'to' => 'required|email',
+                // 'entradaData' => 'required|array',
+            ]);
+
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->CharSet = 'UTF-8';
+            $mail->Host = env('MAIL_HOST');
+            $mail->SMTPAuth = true;
+            $mail->Username = env('MAIL_USERNAME');
+            $mail->Password = env('MAIL_PASSWORD');
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            $mail->setFrom('a21aivantjeh@inspedralbes.cat', 'TaquillaXpress');
+            $mail->addAddress($validatedData['to']);
+
+            // $htmlContent = View::make('cancel', [
+            //     'subject' => $validatedData['subject'],
+            //     'message' => $validatedData['message'],
+            //     'movieData' => $validatedData['movieData'],
+            // ])->render();
+
+            $mail->isHTML(true);
+            $mail->Subject = $validatedData['subject'];
+            $mail->Body = $validatedData['message'];
+
+            $mail->send();
+
+        } catch (ValidationException $validationException) {
+            // Log validation errors
+            Log::warning('Email Send Validation Failed', [
+                'errors' => $validationException->errors()
+            ]);
+
+            return response()->json([
+                'error' => 'Error de validación',
+                'details' => $validationException->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Log unexpected errors
+            Log::error('Unexpected Email Send Error', [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'error' => "Error inesperado: " . $e->getMessage()
+            ], 500);
+        }
+    }
 }

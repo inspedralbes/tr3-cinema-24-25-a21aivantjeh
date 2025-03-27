@@ -5,7 +5,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\SalasController;
+use App\Http\Controllers\EntradasController;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\ShowtimeController;
 
 // Route::get('/', function () {
 //     return view('layout.index');
@@ -62,6 +65,21 @@ Route::middleware(['auth:admin'])->group(function () {
         return view('admin.dashboard.actualizarPelicula', compact('movie'));
     })->name('dashboard.actualizarPelicula');
     Route::post('/dashboard/peliculas', [MovieController::class, 'storeAdmin'])->name('dashboard.peliculas.store');
+
+    // Rutas para el panel de administración de entradas
+    Route::get('/dashboard/entradas', [EntradasController::class, 'indexAdmin'])->name('dashboard.entradas');
+    Route::delete('/dashboard/entradas/{id}', [EntradasController::class, 'destroyAdmin']);
+
+    // Rutas para el panel de administración de salas
+    Route::get('/dashboard/showtimes', [ShowtimeController::class, 'indexAdmin'])->name('dashboard.showtimes');
+    Route::get('/dashboard/showtimes/crear', function () {
+        return view('admin.dashboard.crearShowtime');
+    })->name('dashboard.crearShowtime');
+    Route::get('/dashboard/showtimes/crear', [ShowtimeController::class, 'createAdmin'])->name('dashboard.crearShowtime');
+    Route::post('/dashboard/showtimes', [ShowtimeController::class, 'storeAdmin'])->name('dashboard.showtime.store');
+    Route::get('/dashboard/showtimes/check-availability', [ShowtimeController::class, 'checkAvailability']);
+    Route::delete('/dashboard/showtimes/{id}', [ShowtimeController::class, 'destroyAdmin']);
+    Route::get('/dashboard/showtimes/movieDetails/{id}', [MovieController::class, 'getMovieDetails'])->name('dashboard.movieDetails');
 });
 
 Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout')->middleware('auth:admin');

@@ -168,4 +168,15 @@ class MovieController extends Controller
 
         return redirect()->route('dashboard.peliculas')->with('success', 'Película creada con éxito');
     }
+
+    public function getMovieDetails($id)
+    {
+        $movie = Movie::find($id);
+
+        if (!$movie) {
+            return response()->json(['error' => 'Película no encontrada']);
+        }
+
+        return view('admin.dashboard.datosPelicula', compact('movie'));
+    }
 }

@@ -177,7 +177,7 @@
                 <div class="flex justify-end">
                     <button type="submit"
                         class="bg-[#3083DC] text-white px-6 py-2 rounded-full hover:bg-[#1D72B8] transition duration-300">
-                        Crear Película
+                        Actualizar película
                     </button>
                 </div>
             </form>
