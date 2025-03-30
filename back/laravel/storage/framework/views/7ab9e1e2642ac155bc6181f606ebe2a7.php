@@ -1,3 +1,4 @@
+<<<<<<< HEAD:back/laravel/storage/framework/views/7ab9e1e2642ac155bc6181f606ebe2a7.php
 <?php $__env->startSection('dashboard'); ?>
     <div class="p-5">
         <div class="flex justify-between mb-5">
@@ -83,3 +84,10 @@
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layout.index', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/resources/views/admin/dashboard/showtimes.blade.php ENDPATH**/ ?>
+=======
+@extends('layout.index')
+
+@section('dashboard')
+showtimes
+@endsection
+>>>>>>> parent of 6fa2cc07 (inicialización de test):back/laravel/resources/views/admin/dashboard/showtimes.blade.php

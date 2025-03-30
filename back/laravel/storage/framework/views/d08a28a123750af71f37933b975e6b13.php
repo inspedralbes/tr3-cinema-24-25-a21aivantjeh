@@ -2,9 +2,13 @@
     <div class="p-5">
         <div class="flex justify-between mb-5">
             <h1 class="text-3xl font-bold text-[#D7263D]">Usuarios</h1>
+<<<<<<< HEAD:back/laravel/storage/framework/views/d08a28a123750af71f37933b975e6b13.php
             <a href="<?php echo e(route('dashboard.crearUsuario')); ?>"
                 class="flex items-center gap-1 rounded-full bg-[#3083DC] px-3 py-1 text-white text-sm">Crear usuario<img
                     src="<?php echo e(asset('create.svg')); ?>" alt="" class="size-5"></a>
+=======
+            <a href="{{ route('dashboard.crearUsuario') }}" class="flex items-center gap-1 rounded-full bg-[#3083DC] px-3 py-1 text-white text-sm">Crear usuario<img src="{{ asset('create.svg') }}" alt="" class="size-5"></a>
+>>>>>>> parent of 6fa2cc07 (inicialización de test):back/laravel/resources/views/admin/dashboard/usuarios.blade.php
         </div>
 
         <div class="bg-[white] shadow-md rounded-lg overflow-x-scroll">

@@ -19,9 +19,15 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
+<<<<<<< HEAD:back/laravel/storage/framework/views/e96632a0ac78cd65434a6d47b3e6d8c2.php
                     <?php $__currentLoopData = $movies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $movie): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr class="border-b border-gray-200 hover:bg-gray-100 whitespace-nowrap" id="row-<?php echo e($movie->id); ?>">
                             <td class="py-3 px-6 bg-[#F46036]/90 text-white text-center"><?php echo e($movie->id); ?></td>
+=======
+                    @foreach ($movies as $movie)
+                        <tr class="border-b border-gray-200 hover:bg-gray-100" id="row-{{ $movie->id }}">
+                            <td class="py-3 px-6 bg-[#F46036]/90 text-white text-center">{{ $movie->id }}</td>
+>>>>>>> parent of 6fa2cc07 (inicialización de test):back/laravel/resources/views/admin/dashboard/peliculas.blade.php
                             <td class="py-3 px-6">
                                 <p><?php echo e($movie->title); ?></p>
                             </td>
@@ -32,10 +38,15 @@
                                 <p><?php echo e($movie->year); ?></p>
                             </td>
                             <td class="py-3 px-6 text-center flex gap-2">
+<<<<<<< HEAD:back/laravel/storage/framework/views/e96632a0ac78cd65434a6d47b3e6d8c2.php
                                 <a href="<?php echo e(route('dashboard.actualizarPelicula', $movie)); ?>"
                                 class="flex items-center gap-1 rounded-full bg-[#2A9134] px-3 py-1 text-white text-sm">Editar</a>
                                 <a href="<?php echo e(route('dashboard.movieDetails', $movie)); ?>"
                                     class="flex items-center gap-1 rounded-full bg-[#153131] px-3 py-1 text-white text-sm">Más detalles</a>
+=======
+                                <a href="{{ route('dashboard.actualizarPelicula', $movie) }}"
+                                    class="flex items-center gap-1 rounded-full bg-[#2A9134] px-3 py-1 text-white text-sm">Editar</a>
+>>>>>>> parent of 6fa2cc07 (inicialización de test):back/laravel/resources/views/admin/dashboard/peliculas.blade.php
                                 <button class="rounded-full bg-[#D7263D] px-3 py-1 text-white"
                                     onclick="deletePelicula('<?php echo e($movie->id); ?>')">
                                     Eliminar
