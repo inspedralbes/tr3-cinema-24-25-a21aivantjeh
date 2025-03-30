@@ -2,7 +2,7 @@ APP_NAME=TaquillaXpress
 APP_ENV=local
 APP_KEY=base64:+2pY3hvPze6tPzNBMySg/RoGO+VbXIm6Oiz1PRrm780=
 APP_DEBUG=true
-APP_URL=http://localhost
+APP_URL=http://localhost:8000/
 
 APP_LOCALE=en
 APP_FALLBACK_LOCALE=en
@@ -21,11 +21,18 @@ LOG_DEPRECATIONS_CHANNEL=null
 LOG_LEVEL=debug
 
 DB_CONNECTION=mysql
-DB_HOST=localhost
+DB_HOST=db
 DB_PORT=3306
-DB_DATABASE=a21aivantjeh_cinema
-DB_USERNAME=a21aivantjeh_admin
-DB_PASSWORD=Taquillaxpress_admin1
+DB_DATABASE=cinema
+DB_USERNAME=root
+DB_PASSWORD=admincinema
+
+# DB_CONNECTION=mysql
+# DB_HOST=localhost
+# DB_PORT=3306
+# DB_DATABASE=a21aivantjeh_cinema
+# DB_USERNAME=a21aivantjeh_admin
+# DB_PASSWORD=Taquillaxpress_admin1
 
 SESSION_DRIVER=database
 SESSION_LIFETIME=120
