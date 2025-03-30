@@ -1,0 +1,1 @@
+import{_ as t}from"./Ej77-OnJ.js";import{_ as r,c as a,d as n,b as s,F as c,o as _}from"./CE22bBp4.js";import"./CqLxQuED.js";import"./BGWgXWU_.js";const m={};function f(i,e){const o=t;return _(),a(c,null,[e[0]||(e[0]=n(" favorites page ")),s(o)],64)}const x=r(m,[["render",f]]);export{x as default};
