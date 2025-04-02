@@ -1,77 +1,77 @@
 [
     {
+        "movie_id": 3,
+        "show_date": "2025-03-31",
+        "show_time": "16:00"
+    },
+    {
+        "movie_id": 3,
+        "show_date": "2025-03-31",
+        "show_time": "18:00"
+    },
+    {
+        "movie_id": 3,
+        "show_date": "2025-03-31",
+        "show_time": "20:00"
+    },
+    {
+        "movie_id": 3,
+        "show_date": "2025-04-01",
+        "show_time": "16:00"
+    },
+    {
+        "movie_id": 3,
+        "show_date": "2025-04-01",
+        "show_time": "18:00"
+    },
+    {
+        "movie_id": 3,
+        "show_date": "2025-04-01",
+        "show_time": "20:00"
+    },
+    {
         "movie_id": 1,
-        "show_date": "2025-03-27",
+        "show_date": "2025-04-02",
+        "show_time": "16:00"
+    },
+    {
+        "movie_id": 9,
+        "show_date": "2025-04-02",
+        "show_time": "18:00"
+    },
+    {
+        "movie_id": 9,
+        "show_date": "2025-04-02",
+        "show_time": "20:00"
+    },
+    {
+        "movie_id": 3,
+        "show_date": "2025-04-03",
+        "show_time": "16:00"
+    },
+    {
+        "movie_id": 3,
+        "show_date": "2025-04-03",
+        "show_time": "18:00"
+    },
+    {
+        "movie_id": 9,
+        "show_date": "2025-04-03",
+        "show_time": "20:00"
+    },
+    {
+        "movie_id": 5,
+        "show_date": "2025-04-04",
         "show_time": "16:00"
     },
     {
         "movie_id": 1,
-        "show_date": "2025-03-27",
+        "show_date": "2025-04-04",
         "show_time": "18:00"
     },
     {
-        "movie_id": 9,
-        "show_date": "2025-03-27",
-        "show_time": "20:00"
-    },
-    {
-        "movie_id": 4,
-        "show_date": "2025-03-28",
-        "show_time": "16:00"
-    },
-    {
-        "movie_id": 4,
-        "show_date": "2025-03-28",
-        "show_time": "18:00"
-    },
-    {
-        "movie_id": 4,
-        "show_date": "2025-03-28",
-        "show_time": "20:00"
-    },
-    {
-        "movie_id": 9,
-        "show_date": "2025-03-29",
-        "show_time": "16:00"
-    },
-    {
-        "movie_id": 9,
-        "show_date": "2025-03-29",
-        "show_time": "18:00"
-    },
-    {
-        "movie_id": 6,
-        "show_date": "2025-03-29",
-        "show_time": "20:00"
-    },
-    {
-        "movie_id": 6,
-        "show_date": "2025-03-30",
-        "show_time": "16:00"
-    },
-    {
-        "movie_id": 3,
-        "show_date": "2025-03-30",
-        "show_time": "18:00"
-    },
-    {
-        "movie_id": 6,
-        "show_date": "2025-03-30",
-        "show_time": "20:00"
-    },
-    {
-        "movie_id": 3,
-        "show_date": "2025-03-31",
-        "show_time": "16:00"
-    },
-    {
-        "movie_id": 3,
-        "show_date": "2025-03-31",
-        "show_time": "18:00"
-    },
-    {
-        "movie_id": 8,
-        "show_date": "2025-03-31",
+        "movie_id": 1,
+        "show_date": "2025-04-04",
         "show_time": "20:00"
     }
 ]
